@@ -117,6 +117,7 @@ Un sprint se considera terminado solamente cuando:
 - Alta de marca con tipo inicial y nota opcional.
 - Persistencia en milisegundos y listado cronológico.
 - Salto del reproductor al tocar una marca guardada.
+- Restauración del reproductor en el instante guardado, conservando el estado de reproducción cuando el navegador lo permite.
 
 **Alcance propuesto:**
 

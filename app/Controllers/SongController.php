@@ -146,6 +146,7 @@ final class SongController
             'options' => ['min_range' => 1],
         ]);
         $note = trim((string) ($_POST['note'] ?? ''));
+        $resumePlaying = ($_POST['resume_playing'] ?? '0') === '1';
         $errors = [];
 
         if (($song['audio_filename'] ?? null) === null) {
@@ -180,7 +181,11 @@ final class SongController
             $note === '' ? null : $note,
         );
         flash('success', 'Marca guardada en ' . formatMarkerTime($timeInput) . '.');
-        redirectTo('show', ['id' => (int) $song['id']]);
+        redirectTo('show', [
+            'id' => (int) $song['id'],
+            'resume_ms' => $timeInput,
+            'autoplay' => $resumePlaying ? 1 : 0,
+        ]);
     }
 
     /**
@@ -208,6 +213,10 @@ final class SongController
         array $markerInput = [],
     ): void
     {
+        $resumeMs = filter_input(INPUT_GET, 'resume_ms', FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 0],
+        ]);
+
         render('songs/show', [
             'pageTitle' => (string) $song['title'],
             'song' => $song,
@@ -216,6 +225,8 @@ final class SongController
             'markerTypes' => $this->markers->types(),
             'markerErrors' => $markerErrors,
             'markerInput' => $markerInput,
+            'resumeMs' => is_int($resumeMs) ? $resumeMs : 0,
+            'resumePlaying' => ($_GET['autoplay'] ?? '0') === '1',
             'flashMessage' => pullFlash(),
             'pageScripts' => ($song['audio_filename'] ?? null) === null ? [] : [
                 'https://unpkg.com/wavesurfer.js@7',

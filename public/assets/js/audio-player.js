@@ -15,6 +15,8 @@
   const markerComposer = document.querySelector('[data-marker-composer]');
   const markerTimeInput = markerComposer?.querySelector('[data-marker-time-input]');
   const markerTimeLabel = markerComposer?.querySelector('[data-marker-time-label]');
+  const markerResumePlaying = markerComposer?.querySelector('[data-marker-resume-playing]');
+  const markerForm = markerComposer?.querySelector('form');
 
   const formatTime = (seconds) => {
     if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -60,6 +62,23 @@
     toggle.disabled = false;
     markerCapture.disabled = false;
     zoomControls.forEach((control) => { control.disabled = false; });
+
+    const resumeSeconds = Math.min(seconds, Math.max(0, Number(player.dataset.resumeMs) / 1000));
+    if (resumeSeconds > 0) {
+      wavesurfer.setTime(resumeSeconds);
+      current.textContent = formatTime(resumeSeconds);
+    }
+
+    if (player.dataset.resumePlaying === '1') {
+      wavesurfer.play().catch(() => showPlayState());
+    }
+
+    if (player.dataset.resumeMs !== '0' || player.dataset.resumePlaying === '1') {
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('resume_ms');
+      cleanUrl.searchParams.delete('autoplay');
+      window.history.replaceState({}, '', cleanUrl);
+    }
   });
 
   wavesurfer.on('timeupdate', (seconds) => {
@@ -112,6 +131,10 @@
     markerComposer.hidden = false;
     markerComposer.querySelector('select').focus();
     markerComposer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  markerForm.addEventListener('submit', () => {
+    markerResumePlaying.value = wavesurfer.isPlaying() ? '1' : '0';
   });
 
   document.querySelectorAll('[data-marker-cancel]').forEach((button) => {

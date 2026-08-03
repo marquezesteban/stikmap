@@ -6,6 +6,8 @@
 /** @var list<array{id: int, code: string, label: string}> $markerTypes */
 /** @var array<string, string> $markerErrors */
 /** @var array<string, mixed> $markerInput */
+/** @var int $resumeMs */
+/** @var bool $resumePlaying */
 $hasAudio = $song['audio_filename'] !== null;
 $markerFormOpen = $markerErrors !== [];
 $selectedMarkerType = (int) ($markerInput['marker_type_id'] ?? 0);
@@ -46,6 +48,8 @@ $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
             class="player-panel"
             data-audio-player
             data-audio-url="<?= escape(audioUrl((string) $song['audio_filename'])) ?>"
+            data-resume-ms="<?= $resumeMs ?>"
+            data-resume-playing="<?= $resumePlaying ? '1' : '0' ?>"
         >
             <div class="player-topline">
                 <div>
@@ -110,6 +114,7 @@ $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
             <form method="post" action="<?= escape(appUrl('marker-store', ['id' => (int) $song['id']])) ?>">
                 <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
                 <input type="hidden" name="time_ms" value="<?= $selectedTime ?>" data-marker-time-input>
+                <input type="hidden" name="resume_playing" value="0" data-marker-resume-playing>
 
                 <div class="marker-form-grid">
                     <div class="field-group">
