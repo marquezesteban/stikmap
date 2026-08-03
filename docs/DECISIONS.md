@@ -55,3 +55,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** el código se publica bajo GNU AGPL v3. El nombre, el logotipo y la identidad visual no se conceden bajo esa licencia.
 
 **Motivo:** permitir uso y mejoras open source, exigir que las versiones web modificadas ofrezcan su código y evitar que un fork se presente como una versión oficial de StikMap.
+
+## D-010 — Autoría y licencia visibles
+
+**Decisión:** todas las pantallas incluyen un pie discreto con la atribución `Diseñado y creado por Esteban Marquez · © 2026` y un enlace a la licencia GNU AGPL v3.
+
+**Motivo:** conservar la autoría y hacer que las condiciones del código sean fáciles de encontrar sin interferir con el uso de la aplicación.

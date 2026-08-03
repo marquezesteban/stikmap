@@ -29,6 +29,15 @@ $pageScripts = $pageScripts ?? [];
         <?= $content ?>
     </main>
 
+    <footer class="app-footer">
+        <div class="container app-shell app-footer-content">
+            <span>Diseñado y creado por Esteban Marquez · © 2026</span>
+            <a href="https://github.com/marquezesteban/stikmap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
+                Código bajo GNU AGPL v3
+            </a>
+        </div>
+    </footer>
+
     <script src="<?= escape(dirname($_SERVER['SCRIPT_NAME']) . '/assets/js/app.js') ?>"></script>
     <?php foreach ($pageScripts as $script): ?>
         <script src="<?= escape($script) ?>"></script>

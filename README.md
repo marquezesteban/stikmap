@@ -124,3 +124,5 @@ Los MP3, la base SQLite y los archivos locales de configuración quedan fuera de
 El código de StikMap se publica bajo la licencia [GNU AGPL v3](LICENSE). Las versiones modificadas pueden usarse y distribuirse bajo sus condiciones, incluyendo la obligación de ofrecer el código fuente cuando se utilizan a través de una red.
 
 La licencia del código no concede derechos sobre el nombre, el logotipo ni la identidad visual de StikMap. Consultar [TRADEMARKS.md](TRADEMARKS.md) antes de publicar una versión modificada.
+
+La aplicación muestra de forma permanente la atribución `Diseñado y creado por Esteban Marquez · © 2026` y un enlace a la licencia del código.
