@@ -43,7 +43,33 @@ final class SongController
             return;
         }
 
-        $this->songs->create($title, $artist === '' ? null : $artist);
+        $songId = $this->songs->create($title, $artist === '' ? null : $artist);
+        $audioFile = $_FILES['audio'] ?? [];
+
+        if ($this->hasAudioUpload($audioFile)) {
+            $newAudio = null;
+
+            try {
+                $newAudio = $this->audioUploads->store($audioFile, $songId);
+
+                if (!$this->songs->updateAudio($songId, $newAudio)) {
+                    throw new RuntimeException('No se pudo asociar el audio con la canción.');
+                }
+            } catch (AudioUploadException $exception) {
+                $this->songs->delete($songId);
+                $errors['audio'] = $exception->getMessage();
+                $this->renderForm(['id' => null, 'title' => $title, 'artist' => $artist], $errors);
+                return;
+            } catch (Throwable $exception) {
+                $this->audioUploads->delete($newAudio['filename'] ?? null);
+                $this->songs->delete($songId);
+                throw $exception;
+            }
+
+            flash('success', 'Canción y audio cargados.');
+            redirectTo('show', ['id' => $songId]);
+        }
+
         flash('success', 'Canción creada.');
         redirectTo();
     }
@@ -160,6 +186,14 @@ final class SongController
         }
 
         return [$title, $artist, $errors];
+    }
+
+    /**
+     * @param array<string, mixed> $file
+     */
+    private function hasAudioUpload(array $file): bool
+    {
+        return (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE;
     }
 
     /**

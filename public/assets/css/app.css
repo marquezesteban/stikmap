@@ -528,6 +528,10 @@ input {
 .field-help { color: #777b7c; }
 .field-error { color: var(--danger); }
 
+.create-audio-field .audio-dropzone {
+  min-height: 6.25rem;
+}
+
 .form-actions {
   margin-top: 2rem;
   padding-top: 1.5rem;

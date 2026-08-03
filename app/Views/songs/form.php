@@ -9,10 +9,18 @@
     <div class="form-heading">
         <p class="eyebrow mb-2"><?= $isEditing ? 'Ajustar datos' : 'Sumar al repertorio' ?></p>
         <h1 class="display-title mb-2"><?= $isEditing ? 'Editar canción' : 'Nueva canción' ?></h1>
-        <p class="page-subtitle mb-0">Por ahora sólo necesitamos lo esencial.</p>
+        <p class="page-subtitle mb-0">
+            <?= $isEditing ? 'Actualizá los datos principales.' : 'Completá lo esencial y, si querés, sumá el audio ahora.' ?>
+        </p>
     </div>
 
-    <form class="song-form" method="post" action="<?= escape($isEditing ? appUrl('update', ['id' => (int) $song['id']]) : appUrl('store')) ?>" novalidate>
+    <form
+        class="song-form"
+        method="post"
+        action="<?= escape($isEditing ? appUrl('update', ['id' => (int) $song['id']]) : appUrl('store')) ?>"
+        enctype="multipart/form-data"
+        novalidate
+    >
         <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
 
         <div class="field-group">
@@ -54,6 +62,32 @@
                 <p class="field-help" id="artist-help">Podés dejarlo vacío y completarlo después.</p>
             <?php endif; ?>
         </div>
+
+        <?php if (!$isEditing): ?>
+            <div class="field-group create-audio-field">
+                <label for="song-audio-file">Audio MP3 <span class="optional">Opcional</span></label>
+                <label class="audio-dropzone<?= isset($errors['audio']) ? ' has-error' : '' ?>" for="song-audio-file">
+                    <input
+                        id="song-audio-file"
+                        name="audio"
+                        type="file"
+                        accept=".mp3,audio/mpeg"
+                        data-audio-input
+                        aria-describedby="<?= isset($errors['audio']) ? 'audio-error' : 'audio-help' ?>"
+                    >
+                    <span class="upload-icon" aria-hidden="true">↑</span>
+                    <span class="upload-copy">
+                        <strong data-file-label>Elegir archivo MP3</strong>
+                        <small>Hasta 38 MB · también podés cargarlo después</small>
+                    </span>
+                </label>
+                <?php if (isset($errors['audio'])): ?>
+                    <p class="field-error audio-error" id="audio-error" role="alert"><?= escape($errors['audio']) ?></p>
+                <?php else: ?>
+                    <p class="field-help" id="audio-help">Si lo cargás ahora, al crear la canción iremos directo al reproductor.</p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
         <div class="form-actions">
             <a class="btn-app btn-app-secondary" href="<?= escape(appUrl()) ?>">Cancelar</a>

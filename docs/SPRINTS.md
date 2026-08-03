@@ -80,6 +80,7 @@ Un sprint se considera terminado solamente cuando:
 - Forma de onda con WaveSurfer.js 7.
 - Reproducir, pausar y saltar 10 segundos.
 - Indicador de audio en la biblioteca.
+- Carga opcional del MP3 durante la creación de una canción, con acceso directo al reproductor.
 
 **Pruebas:** MP3 válido, reemplazo, archivo falso rechazado, reproducción completa, limpieza de archivos y revisión responsive/LAN.
 
