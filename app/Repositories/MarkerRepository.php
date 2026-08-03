@@ -44,6 +44,22 @@ final class MarkerRepository
         return (bool) $statement->fetchColumn();
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function findForSong(int $id, int $songId): ?array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id, song_id, marker_type_id, time_ms, note
+             FROM markers
+             WHERE id = :id AND song_id = :song_id'
+        );
+        $statement->execute(['id' => $id, 'song_id' => $songId]);
+        $marker = $statement->fetch();
+
+        return $marker === false ? null : $marker;
+    }
+
     public function create(int $songId, int $typeId, int $timeMs, ?string $note): int
     {
         $statement = $this->pdo->prepare(
@@ -58,5 +74,36 @@ final class MarkerRepository
         ]);
 
         return (int) $this->pdo->lastInsertId();
+    }
+
+    public function update(int $id, int $songId, int $typeId, int $timeMs, ?string $note): bool
+    {
+        $statement = $this->pdo->prepare(
+            'UPDATE markers
+             SET marker_type_id = :marker_type_id,
+                 time_ms = :time_ms,
+                 note = :note,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = :id AND song_id = :song_id'
+        );
+        $statement->execute([
+            'id' => $id,
+            'song_id' => $songId,
+            'marker_type_id' => $typeId,
+            'time_ms' => $timeMs,
+            'note' => $note,
+        ]);
+
+        return $statement->rowCount() > 0;
+    }
+
+    public function delete(int $id, int $songId): bool
+    {
+        $statement = $this->pdo->prepare(
+            'DELETE FROM markers WHERE id = :id AND song_id = :song_id'
+        );
+        $statement->execute(['id' => $id, 'song_id' => $songId]);
+
+        return $statement->rowCount() > 0;
     }
 }

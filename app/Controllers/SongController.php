@@ -139,6 +139,74 @@ final class SongController
     {
         verifyCsrfToken();
         $song = $this->requireSong();
+        [$timeInput, $typeInput, $note, $resumePlaying, $errors, $input] =
+            $this->validatedMarkerInput($song);
+
+        if ($errors !== []) {
+            $this->renderShow($song, null, $errors, $input);
+            return;
+        }
+
+        $this->markers->create(
+            (int) $song['id'],
+            $typeInput,
+            $timeInput,
+            $note === '' ? null : $note,
+        );
+        flash('success', 'Marca guardada en ' . formatMarkerTime($timeInput) . '.');
+        $this->redirectToMarkerTime((int) $song['id'], $timeInput, $resumePlaying);
+    }
+
+    public function updateMarker(): void
+    {
+        verifyCsrfToken();
+        $song = $this->requireSong();
+        $marker = $this->requireMarker((int) $song['id']);
+        [$timeInput, $typeInput, $note, $resumePlaying, $errors, $input] =
+            $this->validatedMarkerInput($song);
+        $input['id'] = (int) $marker['id'];
+
+        if ($errors !== []) {
+            $this->renderShow($song, null, $errors, $input);
+            return;
+        }
+
+        $this->markers->update(
+            (int) $marker['id'],
+            (int) $song['id'],
+            $typeInput,
+            $timeInput,
+            $note === '' ? null : $note,
+        );
+        flash('success', 'Marca actualizada en ' . formatMarkerTime($timeInput) . '.');
+        $this->redirectToMarkerTime((int) $song['id'], $timeInput, $resumePlaying);
+    }
+
+    public function destroyMarker(): void
+    {
+        verifyCsrfToken();
+        $song = $this->requireSong();
+        $marker = $this->requireMarker((int) $song['id']);
+        $resumeMs = filter_input(INPUT_POST, 'resume_ms', FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 0],
+        ]);
+        $resumePlaying = ($_POST['resume_playing'] ?? '0') === '1';
+
+        $this->markers->delete((int) $marker['id'], (int) $song['id']);
+        flash('success', 'Marca eliminada.');
+        $this->redirectToMarkerTime(
+            (int) $song['id'],
+            is_int($resumeMs) ? $resumeMs : (int) $marker['time_ms'],
+            $resumePlaying,
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $song
+     * @return array{0: int, 1: int, 2: string, 3: bool, 4: array<string, string>, 5: array<string, mixed>}
+     */
+    private function validatedMarkerInput(array $song): array
+    {
         $timeInput = filter_input(INPUT_POST, 'time_ms', FILTER_VALIDATE_INT, [
             'options' => ['min_range' => 0],
         ]);
@@ -169,21 +237,21 @@ final class SongController
             'note' => $note,
         ];
 
-        if ($errors !== []) {
-            $this->renderShow($song, null, $errors, $input);
-            return;
-        }
+        return [
+            is_int($timeInput) ? $timeInput : 0,
+            is_int($typeInput) ? $typeInput : 0,
+            $note,
+            $resumePlaying,
+            $errors,
+            $input,
+        ];
+    }
 
-        $this->markers->create(
-            (int) $song['id'],
-            $typeInput,
-            $timeInput,
-            $note === '' ? null : $note,
-        );
-        flash('success', 'Marca guardada en ' . formatMarkerTime($timeInput) . '.');
+    private function redirectToMarkerTime(int $songId, int $timeMs, bool $resumePlaying): never
+    {
         redirectTo('show', [
-            'id' => (int) $song['id'],
-            'resume_ms' => $timeInput,
+            'id' => $songId,
+            'resume_ms' => $timeMs,
             'autoplay' => $resumePlaying ? 1 : 0,
         ]);
     }
@@ -230,6 +298,7 @@ final class SongController
             'flashMessage' => pullFlash(),
             'pageScripts' => ($song['audio_filename'] ?? null) === null ? [] : [
                 'https://unpkg.com/wavesurfer.js@7',
+                'https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js',
                 dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php') . '/assets/js/audio-player.js',
             ],
         ]);
@@ -282,5 +351,24 @@ final class SongController
         }
 
         return $song;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function requireMarker(int $songId): array
+    {
+        $markerId = filter_input(INPUT_GET, 'marker_id', FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 1],
+        ]);
+        $marker = is_int($markerId) ? $this->markers->findForSong($markerId, $songId) : null;
+
+        if ($marker === null) {
+            http_response_code(404);
+            render('errors/404', ['pageTitle' => 'Marca no encontrada']);
+            exit;
+        }
+
+        return $marker;
     }
 }

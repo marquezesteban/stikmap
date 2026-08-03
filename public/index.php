@@ -35,6 +35,8 @@ try {
         ['POST', 'delete'] => $controller->destroy(),
         ['POST', 'audio-upload'] => $controller->uploadAudio(),
         ['POST', 'marker-store'] => $controller->storeMarker(),
+        ['POST', 'marker-update'] => $controller->updateMarker(),
+        ['POST', 'marker-delete'] => $controller->destroyMarker(),
         default => (function (): void {
             http_response_code(404);
             render('errors/404', ['pageTitle' => 'Página no encontrada']);

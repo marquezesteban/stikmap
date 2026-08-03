@@ -41,7 +41,7 @@ $fillType = array_values(array_filter(
     static fn (array $type): bool => $type['code'] === 'fill'
 ))[0];
 $markers->create($songA, (int) $fillType['id'], 45321, 'Entrada de toms');
-$markers->create($songA, (int) $fillType['id'], 12000, null);
+$editableId = $markers->create($songA, (int) $fillType['id'], 12000, null);
 $markers->create($songB, (int) $fillType['id'], 999, null);
 
 $songMarkers = $markers->allForSong($songA);
@@ -50,5 +50,14 @@ assertMarkerValue(12000, $songMarkers[0]['time_ms'], 'Las marcas deben ordenarse
 assertMarkerValue(45321, $songMarkers[1]['time_ms'], 'Debe conservarse el milisegundo exacto.');
 assertMarkerValue('Fill', $songMarkers[1]['type_label'], 'Debe incluirse el nombre del tipo.');
 assertMarkerValue('Entrada de toms', $songMarkers[1]['note'], 'La nota opcional debe persistirse.');
+
+$markers->update($editableId, $songA, (int) $fillType['id'], 18000, 'Corregida');
+$edited = $markers->findForSong($editableId, $songA);
+assertMarkerValue(18000, $edited['time_ms'] ?? null, 'El tiempo debe poder editarse.');
+assertMarkerValue('Corregida', $edited['note'] ?? null, 'La nota debe poder editarse.');
+assertMarkerValue(null, $markers->findForSong($editableId, $songB), 'Una canción no debe acceder a marcas ajenas.');
+
+$markers->delete($editableId, $songA);
+assertMarkerValue(null, $markers->findForSong($editableId, $songA), 'La marca debe poder eliminarse.');
 
 echo 'MarkerRepositoryTest: OK' . PHP_EOL;
