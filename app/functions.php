@@ -76,6 +76,16 @@ function formatFileSize(?int $bytes): string
     return number_format($bytes / 1024 / 1024, 1, ',', '.') . ' MB';
 }
 
+function formatMarkerTime(int $milliseconds): string
+{
+    $milliseconds = max(0, $milliseconds);
+    $minutes = intdiv($milliseconds, 60000);
+    $seconds = intdiv($milliseconds % 60000, 1000);
+    $remainder = $milliseconds % 1000;
+
+    return sprintf('%d:%02d.%03d', $minutes, $seconds, $remainder);
+}
+
 /**
  * @param array<string, mixed> $data
  */

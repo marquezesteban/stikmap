@@ -6,6 +6,7 @@ final class SongController
 {
     public function __construct(
         private readonly SongRepository $songs,
+        private readonly MarkerRepository $markers,
         private readonly AudioUploadService $audioUploads,
     ) {
     }
@@ -134,6 +135,54 @@ final class SongController
         redirectTo('show', ['id' => (int) $song['id']]);
     }
 
+    public function storeMarker(): void
+    {
+        verifyCsrfToken();
+        $song = $this->requireSong();
+        $timeInput = filter_input(INPUT_POST, 'time_ms', FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 0],
+        ]);
+        $typeInput = filter_input(INPUT_POST, 'marker_type_id', FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 1],
+        ]);
+        $note = trim((string) ($_POST['note'] ?? ''));
+        $errors = [];
+
+        if (($song['audio_filename'] ?? null) === null) {
+            $errors['time_ms'] = 'Cargá el audio antes de crear marcas.';
+        } elseif (!is_int($timeInput)) {
+            $errors['time_ms'] = 'Elegí un instante válido desde el reproductor.';
+        }
+
+        if (!is_int($typeInput) || !$this->markers->typeExists($typeInput)) {
+            $errors['marker_type_id'] = 'Elegí un tipo de marca válido.';
+        }
+
+        if (mb_strlen($note) > 240) {
+            $errors['note'] = 'La nota no puede superar los 240 caracteres.';
+        }
+
+        $input = [
+            'time_ms' => is_int($timeInput) ? $timeInput : 0,
+            'marker_type_id' => is_int($typeInput) ? $typeInput : 0,
+            'note' => $note,
+        ];
+
+        if ($errors !== []) {
+            $this->renderShow($song, null, $errors, $input);
+            return;
+        }
+
+        $this->markers->create(
+            (int) $song['id'],
+            $typeInput,
+            $timeInput,
+            $note === '' ? null : $note,
+        );
+        flash('success', 'Marca guardada en ' . formatMarkerTime($timeInput) . '.');
+        redirectTo('show', ['id' => (int) $song['id']]);
+    }
+
     /**
      * @param array<string, mixed> $song
      * @param array<string, string> $errors
@@ -152,12 +201,21 @@ final class SongController
     /**
      * @param array<string, mixed> $song
      */
-    private function renderShow(array $song, ?string $audioError = null): void
+    private function renderShow(
+        array $song,
+        ?string $audioError = null,
+        array $markerErrors = [],
+        array $markerInput = [],
+    ): void
     {
         render('songs/show', [
             'pageTitle' => (string) $song['title'],
             'song' => $song,
             'audioError' => $audioError,
+            'markers' => $this->markers->allForSong((int) $song['id']),
+            'markerTypes' => $this->markers->types(),
+            'markerErrors' => $markerErrors,
+            'markerInput' => $markerInput,
             'flashMessage' => pullFlash(),
             'pageScripts' => ($song['audio_filename'] ?? null) === null ? [] : [
                 'https://unpkg.com/wavesurfer.js@7',

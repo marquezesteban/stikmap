@@ -11,12 +11,14 @@ session_start([
 require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/app/functions.php';
 require_once dirname(__DIR__) . '/app/Repositories/SongRepository.php';
+require_once dirname(__DIR__) . '/app/Repositories/MarkerRepository.php';
 require_once dirname(__DIR__) . '/app/Services/AudioUploadException.php';
 require_once dirname(__DIR__) . '/app/Services/AudioUploadService.php';
 require_once dirname(__DIR__) . '/app/Controllers/SongController.php';
 
 $controller = new SongController(
     new SongRepository(database()),
+    new MarkerRepository(database()),
     new AudioUploadService(__DIR__ . DIRECTORY_SEPARATOR . 'uploads'),
 );
 $action = (string) ($_GET['action'] ?? 'index');
@@ -32,6 +34,7 @@ try {
         ['POST', 'update'] => $controller->update(),
         ['POST', 'delete'] => $controller->destroy(),
         ['POST', 'audio-upload'] => $controller->uploadAudio(),
+        ['POST', 'marker-store'] => $controller->storeMarker(),
         default => (function (): void {
             http_response_code(404);
             render('errors/404', ['pageTitle' => 'Página no encontrada']);
