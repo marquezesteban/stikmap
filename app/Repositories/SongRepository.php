@@ -14,7 +14,7 @@ final class SongRepository
     public function all(): array
     {
         $statement = $this->pdo->query(
-            'SELECT id, title, artist, created_at, updated_at
+            'SELECT id, title, artist, audio_filename, created_at, updated_at
              FROM songs
              ORDER BY lower(title), id'
         );
@@ -28,7 +28,8 @@ final class SongRepository
     public function find(int $id): ?array
     {
         $statement = $this->pdo->prepare(
-            'SELECT id, title, artist, lyrics, audio_filename, created_at, updated_at
+            'SELECT id, title, artist, lyrics, audio_filename, audio_original_name,
+                    audio_mime_type, audio_size_bytes, duration_ms, created_at, updated_at
              FROM songs
              WHERE id = :id'
         );
@@ -62,6 +63,32 @@ final class SongRepository
             'id' => $id,
             'title' => $title,
             'artist' => $artist,
+        ]);
+
+        return $statement->rowCount() > 0;
+    }
+
+    /**
+     * @param array{filename: string, original_name: string, mime_type: string, size_bytes: int} $audio
+     */
+    public function updateAudio(int $id, array $audio): bool
+    {
+        $statement = $this->pdo->prepare(
+            'UPDATE songs
+             SET audio_filename = :filename,
+                 audio_original_name = :original_name,
+                 audio_mime_type = :mime_type,
+                 audio_size_bytes = :size_bytes,
+                 duration_ms = NULL,
+                 updated_at = CURRENT_TIMESTAMP
+             WHERE id = :id'
+        );
+        $statement->execute([
+            'id' => $id,
+            'filename' => $audio['filename'],
+            'original_name' => $audio['original_name'],
+            'mime_type' => $audio['mime_type'],
+            'size_bytes' => $audio['size_bytes'],
         ]);
 
         return $statement->rowCount() > 0;

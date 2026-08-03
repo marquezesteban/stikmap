@@ -34,6 +34,16 @@ assertSameValue(1, $id, 'La canción debe devolver su identificador.');
 assertSameValue('Come Together', $songs->find($id)['title'] ?? null, 'La canción debe poder recuperarse.');
 assertSameValue(1, count($songs->all()), 'El listado debe incluir la canción creada.');
 
+$songs->updateAudio($id, [
+    'filename' => 'song-1-test.mp3',
+    'original_name' => 'ensayo.mp3',
+    'mime_type' => 'audio/mpeg',
+    'size_bytes' => 1024,
+]);
+$withAudio = $songs->find($id);
+assertSameValue('song-1-test.mp3', $withAudio['audio_filename'] ?? null, 'El MP3 debe asociarse a la canción.');
+assertSameValue(1024, $withAudio['audio_size_bytes'] ?? null, 'El tamaño del MP3 debe persistirse.');
+
 $songs->update($id, 'Come Together (ensayo)', null);
 $updated = $songs->find($id);
 assertSameValue('Come Together (ensayo)', $updated['title'] ?? null, 'El título debe actualizarse.');

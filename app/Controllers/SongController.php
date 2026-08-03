@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 final class SongController
 {
-    public function __construct(private readonly SongRepository $songs)
-    {
+    public function __construct(
+        private readonly SongRepository $songs,
+        private readonly AudioUploadService $audioUploads,
+    ) {
     }
 
     public function index(): void
@@ -24,6 +26,11 @@ final class SongController
             'title' => '',
             'artist' => '',
         ]);
+    }
+
+    public function show(): void
+    {
+        $this->renderShow($this->requireSong());
     }
 
     public function store(): void
@@ -70,8 +77,35 @@ final class SongController
         verifyCsrfToken();
         $song = $this->requireSong();
         $this->songs->delete((int) $song['id']);
+        $this->audioUploads->delete($song['audio_filename'] ?? null);
         flash('success', 'Canción eliminada.');
         redirectTo();
+    }
+
+    public function uploadAudio(): void
+    {
+        verifyCsrfToken();
+        $song = $this->requireSong();
+
+        try {
+            $newAudio = $this->audioUploads->store($_FILES['audio'] ?? [], (int) $song['id']);
+        } catch (AudioUploadException $exception) {
+            $this->renderShow($song, $exception->getMessage());
+            return;
+        }
+
+        try {
+            if (!$this->songs->updateAudio((int) $song['id'], $newAudio)) {
+                throw new RuntimeException('La canción dejó de estar disponible durante la carga.');
+            }
+        } catch (Throwable $exception) {
+            $this->audioUploads->delete($newAudio['filename']);
+            throw $exception;
+        }
+
+        $this->audioUploads->delete($song['audio_filename'] ?? null);
+        flash('success', ($song['audio_filename'] ?? null) === null ? 'Audio cargado.' : 'Audio reemplazado.');
+        redirectTo('show', ['id' => (int) $song['id']]);
     }
 
     /**
@@ -86,6 +120,23 @@ final class SongController
             'song' => $song,
             'errors' => $errors,
             'isEditing' => $isEditing,
+        ]);
+    }
+
+    /**
+     * @param array<string, mixed> $song
+     */
+    private function renderShow(array $song, ?string $audioError = null): void
+    {
+        render('songs/show', [
+            'pageTitle' => (string) $song['title'],
+            'song' => $song,
+            'audioError' => $audioError,
+            'flashMessage' => pullFlash(),
+            'pageScripts' => ($song['audio_filename'] ?? null) === null ? [] : [
+                'https://unpkg.com/wavesurfer.js@7',
+                dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php') . '/assets/js/audio-player.js',
+            ],
         ]);
     }
 

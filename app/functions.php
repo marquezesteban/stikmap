@@ -62,6 +62,20 @@ function pullFlash(): ?array
     return is_array($flash) ? $flash : null;
 }
 
+function audioUrl(string $filename): string
+{
+    return dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php') . '/uploads/' . rawurlencode($filename);
+}
+
+function formatFileSize(?int $bytes): string
+{
+    if ($bytes === null || $bytes <= 0) {
+        return '';
+    }
+
+    return number_format($bytes / 1024 / 1024, 1, ',', '.') . ' MB';
+}
+
 /**
  * @param array<string, mixed> $data
  */
