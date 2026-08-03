@@ -1,6 +1,6 @@
-# DrumMap
+# StikMap
 
-DrumMap es una aplicación web local para preparar un mapa temporal de una canción y generar un machete imprimible para batería.
+StikMap es una aplicación web local para preparar un mapa temporal de una canción y generar un machete imprimible para batería.
 
 ## Alcance del MVP
 
@@ -36,7 +36,7 @@ Bootstrap 5.3 y WaveSurfer.js 7 se cargan desde CDN. El MVP no requiere Node.js 
 ## Estructura propuesta
 
 ```text
-drummap/
+stikmap/
 |-- app/
 |   |-- Controllers/       # Coordinación de peticiones HTTP
 |   |-- Repositories/      # Consultas PDO y persistencia
@@ -78,7 +78,7 @@ El tiempo se guarda como un entero en milisegundos para evitar errores de redond
 ## Instalación local
 
 1. Instalar XAMPP con PHP 8 y habilitar las extensiones `pdo_sqlite` y `sqlite3` en `php.ini`.
-2. Mantener el proyecto en `C:\xampp\htdocs\drummap`.
+2. Mantener el proyecto en `C:\xampp\htdocs\stikmap`.
 3. Inicializar la base de datos desde PowerShell:
 
    ```powershell
@@ -86,9 +86,9 @@ El tiempo se guarda como un entero en milisegundos para evitar errores de redond
    ```
 
 4. Iniciar Apache desde el panel de XAMPP.
-5. Abrir `http://localhost/drummap`.
+5. Abrir `http://localhost/stikmap`.
 
-Desde un teléfono o tablet conectado a la misma red, usar `http://IP-DE-LA-PC/drummap`. La IP local se puede consultar con `ipconfig`.
+Desde un teléfono o tablet conectado a la misma red, usar `http://IP-DE-LA-PC/stikmap`. La IP local se puede consultar con `ipconfig`.
 
 El script de inicialización es repetible: aplica solamente las migraciones que todavía no estén registradas.
 
@@ -113,8 +113,14 @@ La implementación avanza mediante sprints pequeños y verificables. El alcance 
 El repositorio local usa la rama `main`. Cuando exista un repositorio remoto vacío en GitHub, se puede vincular sin reescribir el historial:
 
 ```powershell
-git remote add origin https://github.com/USUARIO/drummap.git
+git remote add origin https://github.com/USUARIO/stikmap.git
 git push -u origin main
 ```
 
 Los MP3, la base SQLite y los archivos locales de configuración quedan fuera del repositorio.
+
+## Licencia y marca
+
+El código de StikMap se publica bajo la licencia [GNU AGPL v3](LICENSE). Las versiones modificadas pueden usarse y distribuirse bajo sus condiciones, incluyendo la obligación de ofrecer el código fuente cuando se utilizan a través de una red.
+
+La licencia del código no concede derechos sobre el nombre, el logotipo ni la identidad visual de StikMap. Consultar [TRADEMARKS.md](TRADEMARKS.md) antes de publicar una versión modificada.

@@ -1,10 +1,10 @@
-# Sprints de DrumMap
+# Sprints de StikMap
 
 Este documento conserva el objetivo, el alcance y la evidencia de cada sprint. Una función que no aparece en el alcance del sprint activo puede proponerse, pero no se implementa hasta ser priorizada.
 
 ## Visión del producto
 
-DrumMap convierte una canción en un mapa de ejecución para batería. Debe ayudar a anticipar qué viene, ubicarse rápidamente durante un ensayo y reducir la carga de memorizar estructuras completas.
+StikMap convierte una canción en un mapa de ejecución para batería. Debe ayudar a anticipar qué viene, ubicarse rápidamente durante un ensayo y reducir la carga de memorizar estructuras completas.
 
 El flujo central del MVP es:
 
@@ -84,6 +84,22 @@ Un sprint se considera terminado solamente cuando:
 **Pruebas:** MP3 válido, reemplazo, archivo falso rechazado, reproducción completa, limpieza de archivos y revisión responsive/LAN.
 
 **Commits:** `13ed72e`, `85f58a3`.
+
+## Sprint 2.5 — Identidad y publicación
+
+**Estado:** terminado.
+
+**Objetivo:** adoptar una marca distintiva antes de ampliar el producto y evitar renombrados tardíos.
+
+**Incluyó:**
+
+- Adopción integral del nombre StikMap.
+- Migración de carpeta, URL local y nombre de la base SQLite.
+- Renombrado del repositorio público de GitHub.
+- Licencia de código GNU AGPL v3.
+- Política separada para proteger el nombre y la identidad visual.
+
+**Criterios de cierre:** no quedan referencias activas al nombre anterior, la canción existente se conserva, las URLs local y LAN funcionan y `main` queda sincronizada con GitHub.
 
 ## Sprint 3 — Marcas temporales
 

@@ -10,7 +10,7 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 
 ## D-002 — Interfaz mobile-first con identidad propia
 
-**Decisión:** Bootstrap se usa como base responsive y de accesibilidad, mientras que los componentes visibles reciben estilos propios de DrumMap.
+**Decisión:** Bootstrap se usa como base responsive y de accesibilidad, mientras que los componentes visibles reciben estilos propios de StikMap.
 
 **Motivo:** la aplicación debe sentirse como una herramienta musical táctil, no como un panel administrativo genérico.
 
@@ -43,3 +43,15 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión propuesta para Sprint 3:** una marca representa un único instante temporal. No tiene duración ni se arrastra sobre la forma de onda.
 
 **Motivo:** el objetivo inicial es anticipar entradas, cortes y cambios, no editar segmentos de audio.
+
+## D-008 — StikMap como identidad definitiva
+
+**Decisión:** el producto y el repositorio adoptan el nombre StikMap antes de comenzar el Sprint 3.
+
+**Motivo:** combina `stick` y `map`, se pronuncia de forma similar en español e inglés y describe una herramienta de mapas para bateristas sin depender de un término genérico completo.
+
+## D-009 — AGPL para el código y política separada para la marca
+
+**Decisión:** el código se publica bajo GNU AGPL v3. El nombre, el logotipo y la identidad visual no se conceden bajo esa licencia.
+
+**Motivo:** permitir uso y mejoras open source, exigir que las versiones web modificadas ofrezcan su código y evitar que un fork se presente como una versión oficial de StikMap.

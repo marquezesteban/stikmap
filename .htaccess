@@ -2,5 +2,5 @@ Options -Indexes
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^$ /drummap/public/ [R=302,L]
+    RewriteRule ^$ /stikmap/public/ [R=302,L]
 </IfModule>

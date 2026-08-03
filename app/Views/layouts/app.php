@@ -10,7 +10,7 @@ $pageScripts = $pageScripts ?? [];
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#111315">
-    <title><?= escape($pageTitle) ?> · DrumMap</title>
+    <title><?= escape($pageTitle) ?> · StikMap</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= escape(dirname($_SERVER['SCRIPT_NAME']) . '/assets/css/app.css') ?>" rel="stylesheet">
 </head>
@@ -19,7 +19,7 @@ $pageScripts = $pageScripts ?? [];
         <div class="container app-shell d-flex align-items-center justify-content-between gap-3">
             <a class="brand" href="<?= escape(appUrl()) ?>" aria-label="Ir a canciones">
                 <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span>DrumMap</span>
+                <span>StikMap</span>
             </a>
             <span class="header-context d-none d-sm-inline">Mapa de batería</span>
         </div>

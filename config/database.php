@@ -5,7 +5,7 @@ declare(strict_types=1);
 function databasePath(): string
 {
     return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR
-        . 'database' . DIRECTORY_SEPARATOR . 'drummap.sqlite';
+        . 'database' . DIRECTORY_SEPARATOR . 'stikmap.sqlite';
 }
 
 function database(): PDO
