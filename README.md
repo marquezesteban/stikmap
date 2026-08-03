@@ -83,6 +83,16 @@ El tiempo se guarda como un entero en milisegundos para evitar errores de redond
 
 El script de inicialización es repetible: aplica solamente las migraciones que todavía no estén registradas.
 
+## Pruebas
+
+La prueba actual comprueba el ciclo completo de persistencia de canciones sobre una base SQLite en memoria:
+
+```powershell
+C:\xampp\php\php.exe tests\SongRepositoryTest.php
+```
+
+Antes de cerrar cada etapa también se recorre el flujo desde Apache y se revisa la interfaz en tamaños de teléfono, tablet y escritorio.
+
 ## Etapas y commits
 
 La implementación se divide en cambios pequeños y verificables:
