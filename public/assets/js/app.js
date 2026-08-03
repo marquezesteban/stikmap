@@ -8,6 +8,16 @@ document.querySelectorAll('[data-confirm-delete]').forEach((form) => {
   });
 });
 
+document.querySelectorAll('[data-confirm-marker-delete]').forEach((form) => {
+  form.addEventListener('submit', (event) => {
+    const marker = form.dataset.confirmMarkerDelete || 'esta marca';
+
+    if (!window.confirm(`¿Eliminar la marca ${marker}?`)) {
+      event.preventDefault();
+    }
+  });
+});
+
 const notice = document.querySelector('[data-auto-dismiss]');
 if (notice) {
   window.setTimeout(() => notice.classList.add('is-hiding'), 3200);

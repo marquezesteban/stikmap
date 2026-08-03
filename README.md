@@ -20,7 +20,7 @@ No incluye autenticación, usuarios ni servicios en la nube.
 - [Sprints](docs/SPRINTS.md): alcance, criterios de aceptación, pruebas y commits.
 - [Decisiones](docs/DECISIONS.md): criterios de producto y arquitectura que protegen el foco del MVP.
 
-Estado actual: Sprints 0, 1 y 2 terminados. El Sprint 3 está en desarrollo; ya incluye zoom táctil y alta/listado básico de marcas temporales.
+Estado actual: Sprints 0, 1 y 2 terminados. El Sprint 3 está en desarrollo; ya incluye zoom táctil y creación, listado, edición y eliminación de marcas visibles sobre la onda.
 
 ## Stack
 

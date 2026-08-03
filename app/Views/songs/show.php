@@ -12,6 +12,11 @@ $hasAudio = $song['audio_filename'] !== null;
 $markerFormOpen = $markerErrors !== [];
 $selectedMarkerType = (int) ($markerInput['marker_type_id'] ?? 0);
 $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
+$editingMarkerId = (int) ($markerInput['id'] ?? 0);
+$markerCreateAction = appUrl('marker-store', ['id' => (int) $song['id']]);
+$markerFormAction = $editingMarkerId > 0
+    ? appUrl('marker-update', ['id' => (int) $song['id'], 'marker_id' => $editingMarkerId])
+    : $markerCreateAction;
 ?>
 <section class="song-workspace">
     <a class="back-link" href="<?= escape(appUrl()) ?>"><span aria-hidden="true">←</span> Canciones</a>
@@ -105,13 +110,20 @@ $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
         <section class="marker-composer" data-marker-composer<?= $markerFormOpen ? '' : ' hidden' ?>>
             <div class="marker-composer-heading">
                 <div>
-                    <p class="eyebrow mb-1">Nueva marca</p>
+                    <p class="eyebrow mb-1" data-marker-mode><?= $editingMarkerId > 0 ? 'Editar marca' : 'Nueva marca' ?></p>
                     <h2>Instante <span data-marker-time-label><?= escape(formatMarkerTime($selectedTime)) ?></span></h2>
+                    <button class="marker-use-current" type="button" data-marker-use-current>
+                        Usar posición actual
+                    </button>
                 </div>
                 <button class="marker-close" type="button" data-marker-cancel aria-label="Cerrar formulario">×</button>
             </div>
 
-            <form method="post" action="<?= escape(appUrl('marker-store', ['id' => (int) $song['id']])) ?>">
+            <form
+                method="post"
+                action="<?= escape($markerFormAction) ?>"
+                data-create-action="<?= escape($markerCreateAction) ?>"
+            >
                 <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
                 <input type="hidden" name="time_ms" value="<?= $selectedTime ?>" data-marker-time-input>
                 <input type="hidden" name="resume_playing" value="0" data-marker-resume-playing>
@@ -159,7 +171,9 @@ $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
 
                 <div class="marker-form-actions">
                     <button class="btn-app btn-app-secondary" type="button" data-marker-cancel>Cancelar</button>
-                    <button class="btn-app btn-app-primary" type="submit">Guardar marca</button>
+                    <button class="btn-app btn-app-primary" type="submit" data-marker-submit>
+                        <?= $editingMarkerId > 0 ? 'Guardar cambios' : 'Guardar marca' ?>
+                    </button>
                 </div>
             </form>
         </section>
@@ -181,23 +195,52 @@ $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
             <?php else: ?>
                 <div class="marker-list">
                     <?php foreach ($markers as $marker): ?>
-                        <button
+                        <article
                             class="marker-item"
-                            type="button"
-                            data-marker-seek="<?= (int) $marker['time_ms'] ?>"
                             data-marker-type="<?= escape((string) $marker['type_code']) ?>"
-                            aria-label="Ir a <?= escape(formatMarkerTime((int) $marker['time_ms'])) ?>, <?= escape((string) $marker['type_label']) ?>"
                         >
-                            <span class="marker-time"><?= escape(formatMarkerTime((int) $marker['time_ms'])) ?></span>
-                            <span class="marker-dot" aria-hidden="true"></span>
-                            <span class="marker-content">
-                                <strong><?= escape((string) $marker['type_label']) ?></strong>
-                                <?php if ($marker['note'] !== null): ?>
-                                    <small><?= escape((string) $marker['note']) ?></small>
-                                <?php endif; ?>
-                            </span>
-                            <span class="marker-jump" aria-hidden="true">▶</span>
-                        </button>
+                            <button
+                                class="marker-main"
+                                type="button"
+                                data-marker-seek="<?= (int) $marker['time_ms'] ?>"
+                                data-marker-id="<?= (int) $marker['id'] ?>"
+                                data-marker-label="<?= escape((string) $marker['type_label']) ?>"
+                                aria-label="Ir a <?= escape(formatMarkerTime((int) $marker['time_ms'])) ?>, <?= escape((string) $marker['type_label']) ?>"
+                            >
+                                <span class="marker-time"><?= escape(formatMarkerTime((int) $marker['time_ms'])) ?></span>
+                                <span class="marker-dot" aria-hidden="true"></span>
+                                <span class="marker-content">
+                                    <strong><?= escape((string) $marker['type_label']) ?></strong>
+                                    <?php if ($marker['note'] !== null): ?>
+                                        <small><?= escape((string) $marker['note']) ?></small>
+                                    <?php endif; ?>
+                                </span>
+                                <span class="marker-jump" aria-hidden="true">▶</span>
+                            </button>
+
+                            <div class="marker-actions">
+                                <button
+                                    class="marker-action"
+                                    type="button"
+                                    data-marker-edit
+                                    data-time-ms="<?= (int) $marker['time_ms'] ?>"
+                                    data-marker-type-id="<?= (int) $marker['marker_type_id'] ?>"
+                                    data-note="<?= escape((string) ($marker['note'] ?? '')) ?>"
+                                    data-update-action="<?= escape(appUrl('marker-update', ['id' => (int) $song['id'], 'marker_id' => (int) $marker['id']])) ?>"
+                                >Editar</button>
+                                <form
+                                    method="post"
+                                    action="<?= escape(appUrl('marker-delete', ['id' => (int) $song['id'], 'marker_id' => (int) $marker['id']])) ?>"
+                                    data-confirm-marker-delete="<?= escape(formatMarkerTime((int) $marker['time_ms']) . ' · ' . (string) $marker['type_label']) ?>"
+                                    data-marker-delete-form
+                                >
+                                    <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
+                                    <input type="hidden" name="resume_ms" value="<?= (int) $marker['time_ms'] ?>" data-delete-resume-ms>
+                                    <input type="hidden" name="resume_playing" value="0" data-delete-resume-playing>
+                                    <button class="marker-action is-danger" type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        </article>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>

@@ -119,6 +119,15 @@ Un sprint se considera terminado solamente cuando:
 - Salto del reproductor al tocar una marca guardada.
 - Restauración del reproductor en el instante guardado, conservando el estado de reproducción cuando el navegador lo permite.
 
+**Entrega 3.2 — mantenimiento e integración visual:**
+
+**Estado de la entrega:** terminada y probada.
+
+- Edición de tiempo, tipo y nota desde el mismo panel.
+- Eliminación con confirmación y validación de pertenencia a la canción.
+- Puntos de color sobre la forma de onda mediante Regions de WaveSurfer 7.
+- Salto al instante al tocar tanto el punto como la fila del listado.
+
 **Alcance propuesto:**
 
 - Crear una marca usando el tiempo actual del reproductor.

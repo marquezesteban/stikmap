@@ -17,6 +17,10 @@
   const markerTimeLabel = markerComposer?.querySelector('[data-marker-time-label]');
   const markerResumePlaying = markerComposer?.querySelector('[data-marker-resume-playing]');
   const markerForm = markerComposer?.querySelector('form');
+  const markerMode = markerComposer?.querySelector('[data-marker-mode]');
+  const markerType = markerComposer?.querySelector('[name="marker_type_id"]');
+  const markerNote = markerComposer?.querySelector('[name="note"]');
+  const markerSubmit = markerComposer?.querySelector('[data-marker-submit]');
 
   const formatTime = (seconds) => {
     if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
@@ -56,12 +60,59 @@
     autoCenter: true,
   });
 
+  const regions = window.WaveSurfer.Regions
+    ? wavesurfer.registerPlugin(window.WaveSurfer.Regions.create())
+    : null;
+
+  const markerColors = {
+    intro: '#ff6b45',
+    verse: '#79a8ff',
+    chorus: '#ffd166',
+    fill: '#63d69a',
+    break: '#ff7b7b',
+    ride: '#62d8db',
+    solo: '#c792ea',
+    intensity_up: '#ff9f43',
+    intensity_down: '#8b96a5',
+    ending: '#f5f1e8',
+  };
+
   wavesurfer.on('ready', (seconds) => {
     duration.textContent = formatTime(seconds);
     loading.hidden = true;
     toggle.disabled = false;
     markerCapture.disabled = false;
     zoomControls.forEach((control) => { control.disabled = false; });
+
+    if (regions) {
+      document.querySelectorAll('[data-marker-seek]').forEach((button) => {
+        const markerPoint = document.createElement('span');
+        const markerItem = button.closest('[data-marker-type]');
+        const color = markerColors[markerItem?.dataset.markerType] || '#ff6b45';
+        markerPoint.title = `${button.dataset.markerLabel} · ${formatPreciseTime(button.dataset.markerSeek)}`;
+        markerPoint.setAttribute('aria-label', markerPoint.title);
+        Object.assign(markerPoint.style, {
+          width: '14px',
+          height: '14px',
+          display: 'block',
+          border: '2px solid #111315',
+          borderRadius: '50%',
+          background: color,
+          boxShadow: `0 0 0 3px ${color}33`,
+          cursor: 'pointer',
+          transform: 'translate(-50%, -50%)',
+        });
+
+        regions.addRegion({
+          id: `marker-${button.dataset.markerId}`,
+          start: Number(button.dataset.markerSeek) / 1000,
+          content: markerPoint,
+          color: 'transparent',
+          drag: false,
+          resize: false,
+        });
+      });
+    }
 
     const resumeSeconds = Math.min(seconds, Math.max(0, Number(player.dataset.resumeMs) / 1000));
     if (resumeSeconds > 0) {
@@ -126,11 +177,22 @@
 
   markerCapture.addEventListener('click', () => {
     const timeMs = Math.round(wavesurfer.getCurrentTime() * 1000);
+    markerForm.action = markerForm.dataset.createAction;
     markerTimeInput.value = String(timeMs);
     markerTimeLabel.textContent = formatPreciseTime(timeMs);
+    markerMode.textContent = 'Nueva marca';
+    markerType.value = '';
+    markerNote.value = '';
+    markerSubmit.textContent = 'Guardar marca';
     markerComposer.hidden = false;
-    markerComposer.querySelector('select').focus();
+    markerType.focus();
     markerComposer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+
+  markerComposer.querySelector('[data-marker-use-current]').addEventListener('click', () => {
+    const timeMs = Math.round(wavesurfer.getCurrentTime() * 1000);
+    markerTimeInput.value = String(timeMs);
+    markerTimeLabel.textContent = formatPreciseTime(timeMs);
   });
 
   markerForm.addEventListener('submit', () => {
@@ -147,5 +209,35 @@
       wavesurfer.setTime(seconds);
       current.textContent = formatTime(seconds);
     });
+  });
+
+  document.querySelectorAll('[data-marker-edit]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const timeMs = Number(button.dataset.timeMs);
+      markerForm.action = button.dataset.updateAction;
+      markerTimeInput.value = String(timeMs);
+      markerTimeLabel.textContent = formatPreciseTime(timeMs);
+      markerMode.textContent = 'Editar marca';
+      markerType.value = button.dataset.markerTypeId;
+      markerNote.value = button.dataset.note;
+      markerSubmit.textContent = 'Guardar cambios';
+      wavesurfer.setTime(timeMs / 1000);
+      markerComposer.hidden = false;
+      markerType.focus();
+      markerComposer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  document.querySelectorAll('[data-marker-delete-form]').forEach((form) => {
+    form.addEventListener('submit', () => {
+      form.querySelector('[data-delete-resume-ms]').value = String(Math.round(wavesurfer.getCurrentTime() * 1000));
+      form.querySelector('[data-delete-resume-playing]').value = wavesurfer.isPlaying() ? '1' : '0';
+    });
+  });
+
+  regions?.on('region-clicked', (region, event) => {
+    event.stopPropagation();
+    wavesurfer.setTime(region.start);
+    current.textContent = formatTime(region.start);
   });
 })();
