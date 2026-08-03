@@ -1,0 +1,134 @@
+# Sprints de DrumMap
+
+Este documento conserva el objetivo, el alcance y la evidencia de cada sprint. Una función que no aparece en el alcance del sprint activo puede proponerse, pero no se implementa hasta ser priorizada.
+
+## Visión del producto
+
+DrumMap convierte una canción en un mapa de ejecución para batería. Debe ayudar a anticipar qué viene, ubicarse rápidamente durante un ensayo y reducir la carga de memorizar estructuras completas.
+
+El flujo central del MVP es:
+
+```text
+Canción → MP3 y letra → escucha → marcas temporales → mapa de batería → machete
+```
+
+La experiencia prioriza teléfono y tablet: controles táctiles, lectura rápida, pocas decisiones por pantalla y una identidad visual propia.
+
+## Definición de terminado
+
+Un sprint se considera terminado solamente cuando:
+
+- Cumple todos sus criterios de aceptación.
+- Fue probado desde Apache con datos reales o controlados.
+- Fue revisado en teléfono, tablet y escritorio cuando afecta la interfaz.
+- No deja datos ni archivos temporales.
+- Tiene commits pequeños y descriptivos.
+- Actualiza la documentación correspondiente.
+- El usuario valida la experiencia antes de avanzar.
+
+## Sprint 0 — Base del proyecto
+
+**Estado:** terminado.
+
+**Objetivo:** establecer una base segura y versionada para el MVP.
+
+**Incluyó:**
+
+- Estructura de carpetas.
+- Repositorio Git sobre `main`.
+- README y `.gitignore`.
+- Conexión PDO a SQLite.
+- Migraciones idempotentes.
+- Tablas de canciones, tipos de marca, líneas de letra y marcas.
+- Protección Apache de carpetas internas y uploads.
+
+**Pruebas:** sintaxis PHP, creación repetible de SQLite, tablas, catálogo de 10 marcas y claves foráneas.
+
+**Commits:** `2faa98d`, `64f944c`, `6b768d2`.
+
+## Sprint 1 — Biblioteca de canciones
+
+**Estado:** terminado y validado por el usuario.
+
+**Objetivo:** administrar el repertorio desde cualquier tamaño de pantalla.
+
+**Incluyó:**
+
+- Listado y estado vacío.
+- Alta con título obligatorio y artista opcional.
+- Edición y eliminación con confirmación.
+- Validación, CSRF y errores 404.
+- Diseño mobile-first con identidad propia.
+- Acceso desde dispositivos de la red local.
+
+**Pruebas:** creación, validación, edición, eliminación, persistencia, navegación táctil, ausencia de desbordamiento horizontal y acceso LAN.
+
+**Commits:** `e2b5964`, `82997ed`, `a0a3a26`.
+
+## Sprint 2 — Audio y forma de onda
+
+**Estado:** terminado; pendiente de validación prolongada con canciones del usuario.
+
+**Objetivo:** cargar y recorrer el audio que servirá como referencia temporal.
+
+**Incluyó:**
+
+- Carga y reemplazo de MP3 de hasta 38 MB.
+- Validación por extensión, MIME y estado de subida.
+- Nombres internos aleatorios y limpieza de archivos reemplazados.
+- Pantalla de trabajo por canción.
+- Forma de onda con WaveSurfer.js 7.
+- Reproducir, pausar y saltar 10 segundos.
+- Indicador de audio en la biblioteca.
+
+**Pruebas:** MP3 válido, reemplazo, archivo falso rechazado, reproducción completa, limpieza de archivos y revisión responsive/LAN.
+
+**Commits:** `13ed72e`, `85f58a3`.
+
+## Sprint 3 — Marcas temporales
+
+**Estado:** propuesto; sin implementación iniciada.
+
+**Objetivo:** convertir la escucha en un mapa de batería editable y persistente.
+
+**Alcance propuesto:**
+
+- Crear una marca usando el tiempo actual del reproductor.
+- Guardar el tiempo como milisegundos enteros.
+- Elegir uno de los 10 tipos iniciales.
+- Agregar una nota opcional.
+- Mostrar las marcas ordenadas cronológicamente.
+- Representar cada marca como un punto visible sobre la forma de onda.
+- Tocar una marca para llevar el reproductor a ese instante.
+- Editar tiempo, tipo y nota.
+- Eliminar una marca con confirmación.
+- Mantener todos los controles cómodos para uso táctil.
+
+**Propuesta de interacción:** un botón principal `Marcar ahora` captura el instante actual y abre un panel compacto para elegir el tipo y escribir una nota. La reproducción no se detiene automáticamente; el baterista decide cuándo pausar.
+
+**Criterios de aceptación:**
+
+- El botón permanece deshabilitado hasta que el audio esté listo.
+- Una marca conserva el mismo instante después de recargar la página.
+- El listado y la forma de onda reflejan altas, ediciones y eliminaciones.
+- Las marcas siempre pertenecen a la canción correcta.
+- Tocar una marca posiciona el audio con precisión.
+- Los datos ingresados se validan y escapan correctamente.
+- El flujo funciona en teléfono, tablet y escritorio sin hover obligatorio.
+- Las pruebas existentes siguen pasando.
+
+**Fuera de alcance:**
+
+- Letra y asociación con líneas.
+- Vista imprimible.
+- Tipos de marca personalizados.
+- Arrastrar marcas sobre la forma de onda.
+- Atajos de teclado.
+- Regiones con inicio y fin.
+- Sincronización entre dispositivos.
+
+## Sprints siguientes
+
+- **Sprint 4 — Letra:** pegado, división en líneas y asociación opcional con marcas.
+- **Sprint 5 — Impresión:** machete compacto, legible y preparado para papel.
+- **Cierre del MVP:** pruebas integrales, correcciones y documentación de instalación.

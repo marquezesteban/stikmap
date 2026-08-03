@@ -15,6 +15,13 @@ DrumMap es una aplicación web local para preparar un mapa temporal de una canci
 
 No incluye autenticación, usuarios ni servicios en la nube.
 
+## Estado y documentación
+
+- [Sprints](docs/SPRINTS.md): alcance, criterios de aceptación, pruebas y commits.
+- [Decisiones](docs/DECISIONS.md): criterios de producto y arquitectura que protegen el foco del MVP.
+
+Estado actual: Sprints 0, 1 y 2 terminados. El Sprint 3 está definido, pero todavía no fue implementado.
+
 ## Stack
 
 - PHP 8
@@ -79,7 +86,9 @@ El tiempo se guarda como un entero en milisegundos para evitar errores de redond
    ```
 
 4. Iniciar Apache desde el panel de XAMPP.
-5. Abrir `http://localhost/drummap/public/`.
+5. Abrir `http://localhost/drummap`.
+
+Desde un teléfono o tablet conectado a la misma red, usar `http://IP-DE-LA-PC/drummap`. La IP local se puede consultar con `ipconfig`.
 
 El script de inicialización es repetible: aplica solamente las migraciones que todavía no estén registradas.
 
@@ -95,22 +104,9 @@ Antes de cerrar cada etapa también se recorre el flujo desde Apache y se revisa
 
 La carga de audio acepta archivos MP3 de hasta 38 MB. Los archivos reciben nombres internos aleatorios, se validan por extensión y contenido, y se guardan en `public/uploads/`, fuera de Git. Al reemplazar un MP3 o eliminar su canción también se elimina el archivo anterior.
 
-## Etapas y commits
+## Forma de trabajo
 
-La implementación se divide en cambios pequeños y verificables:
-
-1. `chore: create initial project structure`
-2. `docs: describe MVP architecture and roadmap`
-3. `feat(db): add initial SQLite schema`
-4. `feat(songs): add song list and creation`
-5. `feat(songs): add song editing and deletion`
-6. `feat(audio): add MP3 upload and waveform player`
-7. `feat(markers): add marker creation and timeline`
-8. `feat(markers): add marker editing and deletion`
-9. `feat(lyrics): add lyric line associations`
-10. `feat(print): add drummer cheat sheet view`
-
-Cada etapa debería cerrar con una comprobación manual y, donde aporte valor, una prueba automatizada pequeña.
+La implementación avanza mediante sprints pequeños y verificables. El alcance y la evidencia de cada uno se mantienen en [docs/SPRINTS.md](docs/SPRINTS.md); las decisiones que afectan el producto se registran en [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## GitHub
 
