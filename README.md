@@ -24,7 +24,7 @@ No incluye autenticación, usuarios ni servicios en la nube.
 - WaveSurfer.js
 - Apache de XAMPP
 
-Bootstrap y WaveSurfer.js se incorporarán desde CDN en la etapa de interfaz. El MVP no requiere Node.js ni un proceso de compilación.
+Bootstrap 5.3 y WaveSurfer.js 7 se cargan desde CDN. El MVP no requiere Node.js ni un proceso de compilación.
 
 ## Estructura propuesta
 
@@ -92,6 +92,8 @@ C:\xampp\php\php.exe tests\SongRepositoryTest.php
 ```
 
 Antes de cerrar cada etapa también se recorre el flujo desde Apache y se revisa la interfaz en tamaños de teléfono, tablet y escritorio.
+
+La carga de audio acepta archivos MP3 de hasta 38 MB. Los archivos reciben nombres internos aleatorios, se validan por extensión y contenido, y se guardan en `public/uploads/`, fuera de Git. Al reemplazar un MP3 o eliminar su canción también se elimina el archivo anterior.
 
 ## Etapas y commits
 

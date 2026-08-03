@@ -40,10 +40,16 @@ $songCount = count($songs);
             <article class="song-card">
                 <div class="song-number" aria-hidden="true"><?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?></div>
                 <div class="song-info">
-                    <h2><?= escape((string) $song['title']) ?></h2>
+                    <h2><a href="<?= escape(appUrl('show', ['id' => (int) $song['id']])) ?>"><?= escape((string) $song['title']) ?></a></h2>
                     <p><?= escape($song['artist'] ?: 'Artista sin especificar') ?></p>
+                    <span class="song-status<?= $song['audio_filename'] === null ? '' : ' is-ready' ?>">
+                        <?= $song['audio_filename'] === null ? 'Sin audio' : 'Audio listo' ?>
+                    </span>
                 </div>
                 <div class="song-actions">
+                    <a class="btn-icon-text btn-open-song" href="<?= escape(appUrl('show', ['id' => (int) $song['id']])) ?>">
+                        Abrir
+                    </a>
                     <a class="btn-icon-text" href="<?= escape(appUrl('edit', ['id' => (int) $song['id']])) ?>">
                         Editar
                     </a>

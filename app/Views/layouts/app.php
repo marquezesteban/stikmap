@@ -1,6 +1,8 @@
 <?php
 /** @var string $content */
 /** @var string $pageTitle */
+/** @var list<string>|null $pageScripts */
+$pageScripts = $pageScripts ?? [];
 ?>
 <!doctype html>
 <html lang="es">
@@ -28,5 +30,8 @@
     </main>
 
     <script src="<?= escape(dirname($_SERVER['SCRIPT_NAME']) . '/assets/js/app.js') ?>"></script>
+    <?php foreach ($pageScripts as $script): ?>
+        <script src="<?= escape($script) ?>"></script>
+    <?php endforeach; ?>
 </body>
 </html>
