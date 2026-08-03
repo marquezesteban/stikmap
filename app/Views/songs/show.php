@@ -2,7 +2,14 @@
 /** @var array<string, mixed> $song */
 /** @var string|null $audioError */
 /** @var array{type: string, message: string}|null $flashMessage */
+/** @var list<array<string, mixed>> $markers */
+/** @var list<array{id: int, code: string, label: string}> $markerTypes */
+/** @var array<string, string> $markerErrors */
+/** @var array<string, mixed> $markerInput */
 $hasAudio = $song['audio_filename'] !== null;
+$markerFormOpen = $markerErrors !== [];
+$selectedMarkerType = (int) ($markerInput['marker_type_id'] ?? 0);
+$selectedTime = (int) ($markerInput['time_ms'] ?? 0);
 ?>
 <section class="song-workspace">
     <a class="back-link" href="<?= escape(appUrl()) ?>"><span aria-hidden="true">←</span> Canciones</a>
@@ -53,6 +60,23 @@ $hasAudio = $song['audio_filename'] !== null;
                 <div class="waveform-loading" data-player-loading>Cargando forma de onda…</div>
             </div>
 
+            <div class="zoom-controls" aria-label="Zoom de la forma de onda">
+                <button class="zoom-button" type="button" data-zoom-step="-10" aria-label="Alejar forma de onda" disabled>−</button>
+                <input
+                    type="range"
+                    min="0"
+                    max="180"
+                    step="10"
+                    value="0"
+                    data-player-zoom
+                    aria-label="Nivel de zoom"
+                    disabled
+                >
+                <button class="zoom-button" type="button" data-zoom-step="10" aria-label="Acercar forma de onda" disabled>+</button>
+                <button class="zoom-reset" type="button" data-zoom-reset disabled>Ver completa</button>
+                <span class="zoom-value" data-zoom-value>Vista completa</span>
+            </div>
+
             <div class="player-controls">
                 <button class="transport-button transport-skip" type="button" data-player-skip="-10" aria-label="Retroceder 10 segundos">−10</button>
                 <button class="transport-button transport-main" type="button" data-player-toggle aria-label="Reproducir" disabled>
@@ -66,7 +90,112 @@ $hasAudio = $song['audio_filename'] !== null;
                 </div>
             </div>
 
+            <button class="mark-now-button" type="button" data-marker-capture disabled>
+                <span aria-hidden="true">＋</span>
+                Marcar ahora
+            </button>
+
             <p class="player-error" data-player-error role="alert" hidden></p>
+        </section>
+
+        <section class="marker-composer" data-marker-composer<?= $markerFormOpen ? '' : ' hidden' ?>>
+            <div class="marker-composer-heading">
+                <div>
+                    <p class="eyebrow mb-1">Nueva marca</p>
+                    <h2>Instante <span data-marker-time-label><?= escape(formatMarkerTime($selectedTime)) ?></span></h2>
+                </div>
+                <button class="marker-close" type="button" data-marker-cancel aria-label="Cerrar formulario">×</button>
+            </div>
+
+            <form method="post" action="<?= escape(appUrl('marker-store', ['id' => (int) $song['id']])) ?>">
+                <input type="hidden" name="csrf_token" value="<?= escape(csrfToken()) ?>">
+                <input type="hidden" name="time_ms" value="<?= $selectedTime ?>" data-marker-time-input>
+
+                <div class="marker-form-grid">
+                    <div class="field-group">
+                        <label for="marker-type">Tipo</label>
+                        <select
+                            class="app-input<?= isset($markerErrors['marker_type_id']) ? ' is-invalid' : '' ?>"
+                            id="marker-type"
+                            name="marker_type_id"
+                            required
+                        >
+                            <option value="">Elegir tipo…</option>
+                            <?php foreach ($markerTypes as $type): ?>
+                                <option value="<?= (int) $type['id'] ?>"<?= $selectedMarkerType === (int) $type['id'] ? ' selected' : '' ?>>
+                                    <?= escape($type['label']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php if (isset($markerErrors['marker_type_id'])): ?>
+                            <p class="field-error"><?= escape($markerErrors['marker_type_id']) ?></p>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="marker-note">Nota <span class="optional">Opcional</span></label>
+                        <textarea
+                            class="app-input app-textarea<?= isset($markerErrors['note']) ? ' is-invalid' : '' ?>"
+                            id="marker-note"
+                            name="note"
+                            maxlength="240"
+                            rows="3"
+                            placeholder="Ej.: entrada con toms"
+                        ><?= escape((string) ($markerInput['note'] ?? '')) ?></textarea>
+                        <?php if (isset($markerErrors['note'])): ?>
+                            <p class="field-error"><?= escape($markerErrors['note']) ?></p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <?php if (isset($markerErrors['time_ms'])): ?>
+                    <p class="field-error marker-time-error"><?= escape($markerErrors['time_ms']) ?></p>
+                <?php endif; ?>
+
+                <div class="marker-form-actions">
+                    <button class="btn-app btn-app-secondary" type="button" data-marker-cancel>Cancelar</button>
+                    <button class="btn-app btn-app-primary" type="submit">Guardar marca</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="markers-panel" aria-labelledby="markers-title">
+            <div class="markers-heading">
+                <div>
+                    <p class="eyebrow mb-1">Mapa temporal</p>
+                    <h2 id="markers-title">Marcas</h2>
+                </div>
+                <span><?= count($markers) ?></span>
+            </div>
+
+            <?php if ($markers === []): ?>
+                <div class="markers-empty">
+                    <p>Todavía no hay marcas.</p>
+                    <span>Reproducí la canción y tocá “Marcar ahora” en el instante que quieras recordar.</span>
+                </div>
+            <?php else: ?>
+                <div class="marker-list">
+                    <?php foreach ($markers as $marker): ?>
+                        <button
+                            class="marker-item"
+                            type="button"
+                            data-marker-seek="<?= (int) $marker['time_ms'] ?>"
+                            data-marker-type="<?= escape((string) $marker['type_code']) ?>"
+                            aria-label="Ir a <?= escape(formatMarkerTime((int) $marker['time_ms'])) ?>, <?= escape((string) $marker['type_label']) ?>"
+                        >
+                            <span class="marker-time"><?= escape(formatMarkerTime((int) $marker['time_ms'])) ?></span>
+                            <span class="marker-dot" aria-hidden="true"></span>
+                            <span class="marker-content">
+                                <strong><?= escape((string) $marker['type_label']) ?></strong>
+                                <?php if ($marker['note'] !== null): ?>
+                                    <small><?= escape((string) $marker['note']) ?></small>
+                                <?php endif; ?>
+                            </span>
+                            <span class="marker-jump" aria-hidden="true">▶</span>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </section>
 
         <details class="replace-audio"<?= $audioError !== null ? ' open' : '' ?>>

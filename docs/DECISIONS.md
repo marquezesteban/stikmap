@@ -40,7 +40,7 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 
 ## D-007 — Las marcas son instantes, no regiones
 
-**Decisión propuesta para Sprint 3:** una marca representa un único instante temporal. No tiene duración ni se arrastra sobre la forma de onda.
+**Decisión:** una marca representa un único instante temporal. No tiene duración ni se arrastra sobre la forma de onda.
 
 **Motivo:** el objetivo inicial es anticipar entradas, cortes y cambios, no editar segmentos de audio.
 

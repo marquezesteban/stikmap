@@ -104,9 +104,19 @@ Un sprint se considera terminado solamente cuando:
 
 ## Sprint 3 — Marcas temporales
 
-**Estado:** propuesto; sin implementación iniciada.
+**Estado:** en desarrollo.
 
 **Objetivo:** convertir la escucha en un mapa de batería editable y persistente.
+
+**Entrega 3.1 — precisión y persistencia básica:**
+
+**Estado de la entrega:** terminada y probada.
+
+- Zoom táctil de la forma de onda con controles para acercar, alejar y volver a la vista completa.
+- Captura del instante actual sin pausar automáticamente la reproducción.
+- Alta de marca con tipo inicial y nota opcional.
+- Persistencia en milisegundos y listado cronológico.
+- Salto del reproductor al tocar una marca guardada.
 
 **Alcance propuesto:**
 
