@@ -1,0 +1,26 @@
+# Runtime data
+/storage/database/*.sqlite
+/storage/database/*.sqlite-*
+/storage/logs/*
+!/storage/database/.gitkeep
+!/storage/logs/.gitkeep
+
+# Uploaded audio
+/public/uploads/*
+!/public/uploads/.gitkeep
+
+# Local configuration and secrets
+/.env
+/.env.local
+
+# Test and tooling output
+/.phpunit.cache/
+/coverage/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
