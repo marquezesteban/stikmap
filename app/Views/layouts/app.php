@@ -12,7 +12,7 @@ $pageScripts = $pageScripts ?? [];
     <meta name="theme-color" content="#111315">
     <title><?= escape($pageTitle) ?> · StikMap</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="<?= escape(dirname($_SERVER['SCRIPT_NAME']) . '/assets/css/app.css') ?>" rel="stylesheet">
+    <link href="<?= escape(assetUrl('assets/css/app.css')) ?>" rel="stylesheet">
 </head>
 <body>
     <header class="app-header">
@@ -38,7 +38,7 @@ $pageScripts = $pageScripts ?? [];
         </div>
     </footer>
 
-    <script src="<?= escape(dirname($_SERVER['SCRIPT_NAME']) . '/assets/js/app.js') ?>"></script>
+    <script src="<?= escape(assetUrl('assets/js/app.js')) ?>"></script>
     <?php foreach ($pageScripts as $script): ?>
         <script src="<?= escape($script) ?>"></script>
     <?php endforeach; ?>

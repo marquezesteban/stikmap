@@ -61,3 +61,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** todas las pantallas incluyen un pie discreto con la atribución `Diseñado y creado por Esteban Marquez · © 2026` y un enlace a la licencia GNU AGPL v3.
 
 **Motivo:** conservar la autoría y hacer que las condiciones del código sean fáciles de encontrar sin interferir con el uso de la aplicación.
+
+## D-011 — Versionado automático de recursos locales
+
+**Decisión:** las URLs de CSS y JavaScript propios incluyen la fecha de modificación del archivo como versión.
+
+**Motivo:** evitar que navegadores de escritorio, tablets o teléfonos conserven una interfaz anterior después de una actualización local.

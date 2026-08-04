@@ -299,7 +299,7 @@ final class SongController
             'pageScripts' => ($song['audio_filename'] ?? null) === null ? [] : [
                 'https://unpkg.com/wavesurfer.js@7',
                 'https://unpkg.com/wavesurfer.js@7/dist/plugins/regions.min.js',
-                dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php') . '/assets/js/audio-player.js',
+                assetUrl('assets/js/audio-player.js'),
             ],
         ]);
     }

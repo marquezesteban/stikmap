@@ -67,6 +67,17 @@ function audioUrl(string $filename): string
     return dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php') . '/uploads/' . rawurlencode($filename);
 }
 
+function assetUrl(string $relativePath): string
+{
+    $normalizedPath = ltrim(str_replace('\\', '/', $relativePath), '/');
+    $filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR
+        . str_replace('/', DIRECTORY_SEPARATOR, $normalizedPath);
+    $version = is_file($filePath) ? (string) filemtime($filePath) : '1';
+
+    return dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php') . '/' . $normalizedPath
+        . '?v=' . rawurlencode($version);
+}
+
 function formatFileSize(?int $bytes): string
 {
     if ($bytes === null || $bytes <= 0) {
