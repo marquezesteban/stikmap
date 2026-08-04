@@ -20,6 +20,7 @@
   const markerMode = markerComposer?.querySelector('[data-marker-mode]');
   const markerType = markerComposer?.querySelector('[name="marker_type_id"]');
   const markerNote = markerComposer?.querySelector('[name="note"]');
+  const markerLyricLine = markerComposer?.querySelector('[name="lyric_line_id"]');
   const markerSubmit = markerComposer?.querySelector('[data-marker-submit]');
 
   const formatPreciseTime = (milliseconds) => {
@@ -188,6 +189,7 @@
     markerMode.textContent = 'Nueva marca';
     markerType.value = '';
     markerNote.value = '';
+    if (markerLyricLine) markerLyricLine.value = '';
     markerSubmit.textContent = 'Guardar marca';
     markerComposer.hidden = false;
     markerType.focus();
@@ -259,6 +261,7 @@
       markerMode.textContent = 'Editar marca';
       markerType.value = button.dataset.markerTypeId;
       markerNote.value = button.dataset.note;
+      if (markerLyricLine) markerLyricLine.value = button.dataset.lyricLineId || '';
       markerSubmit.textContent = 'Guardar cambios';
       wavesurfer.setTime(timeMs / 1000);
       markerComposer.hidden = false;

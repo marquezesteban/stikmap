@@ -41,36 +41,131 @@ final class SongRepository
 
     public function create(string $title, ?string $artist, ?string $lyrics): int
     {
-        $statement = $this->pdo->prepare(
-            'INSERT INTO songs (title, artist, lyrics) VALUES (:title, :artist, :lyrics)'
-        );
-        $statement->execute([
-            'title' => $title,
-            'artist' => $artist,
-            'lyrics' => $lyrics,
-        ]);
+        $ownsTransaction = !$this->pdo->inTransaction();
 
-        return (int) $this->pdo->lastInsertId();
+        if ($ownsTransaction) {
+            $this->pdo->beginTransaction();
+        }
+
+        try {
+            $statement = $this->pdo->prepare(
+                'INSERT INTO songs (title, artist, lyrics) VALUES (:title, :artist, :lyrics)'
+            );
+            $statement->execute([
+                'title' => $title,
+                'artist' => $artist,
+                'lyrics' => $lyrics,
+            ]);
+            $songId = (int) $this->pdo->lastInsertId();
+            $this->syncLyricLines($songId, $lyrics);
+
+            if ($ownsTransaction) {
+                $this->pdo->commit();
+            }
+        } catch (Throwable $exception) {
+            if ($ownsTransaction && $this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+
+        return $songId;
     }
 
     public function update(int $id, string $title, ?string $artist, ?string $lyrics): bool
     {
-        $statement = $this->pdo->prepare(
-            'UPDATE songs
-             SET title = :title,
-                 artist = :artist,
-                 lyrics = :lyrics,
-                 updated_at = CURRENT_TIMESTAMP
-             WHERE id = :id'
-        );
-        $statement->execute([
-            'id' => $id,
-            'title' => $title,
-            'artist' => $artist,
-            'lyrics' => $lyrics,
-        ]);
+        $ownsTransaction = !$this->pdo->inTransaction();
 
-        return $statement->rowCount() > 0;
+        if ($ownsTransaction) {
+            $this->pdo->beginTransaction();
+        }
+
+        try {
+            $statement = $this->pdo->prepare(
+                'UPDATE songs
+                 SET title = :title,
+                     artist = :artist,
+                     lyrics = :lyrics,
+                     updated_at = CURRENT_TIMESTAMP
+                 WHERE id = :id'
+            );
+            $statement->execute([
+                'id' => $id,
+                'title' => $title,
+                'artist' => $artist,
+                'lyrics' => $lyrics,
+            ]);
+            $updated = $statement->rowCount() > 0;
+
+            if ($updated) {
+                $this->syncLyricLines($id, $lyrics);
+            }
+
+            if ($ownsTransaction) {
+                $this->pdo->commit();
+            }
+        } catch (Throwable $exception) {
+            if ($ownsTransaction && $this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+
+        return $updated;
+    }
+
+    /**
+     * @return list<array{id: int, line_number: int, content: string}>
+     */
+    public function lyricLinesForSong(int $songId): array
+    {
+        $statement = $this->pdo->prepare(
+            'SELECT id, line_number, content
+             FROM lyric_lines
+             WHERE song_id = :song_id
+             ORDER BY line_number, id'
+        );
+        $statement->execute(['song_id' => $songId]);
+
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Completa las líneas de letras guardadas antes de v0.4.1.
+     *
+     * @return list<array{id: int, line_number: int, content: string}>
+     */
+    public function ensureLyricLinesForSong(int $songId, ?string $lyrics): array
+    {
+        $lines = $this->lyricLinesForSong($songId);
+
+        if ($lines !== [] || trim((string) $lyrics) === '') {
+            return $lines;
+        }
+
+        $ownsTransaction = !$this->pdo->inTransaction();
+
+        if ($ownsTransaction) {
+            $this->pdo->beginTransaction();
+        }
+
+        try {
+            $this->syncLyricLines($songId, $lyrics);
+
+            if ($ownsTransaction) {
+                $this->pdo->commit();
+            }
+        } catch (Throwable $exception) {
+            if ($ownsTransaction && $this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            throw $exception;
+        }
+
+        return $this->lyricLinesForSong($songId);
     }
 
     /**
@@ -105,5 +200,92 @@ final class SongRepository
         $statement->execute(['id' => $id]);
 
         return $statement->rowCount() > 0;
+    }
+
+    private function syncLyricLines(int $songId, ?string $lyrics): void
+    {
+        $newLines = [];
+        $sourceLines = $lyrics === null ? [] : preg_split('/\R/u', $lyrics);
+
+        foreach ($sourceLines === false ? [] : $sourceLines as $index => $content) {
+            $content = trim($content);
+
+            if ($content !== '') {
+                $newLines[] = [
+                    'line_number' => $index + 1,
+                    'content' => $content,
+                ];
+            }
+        }
+
+        $oldLines = $this->lyricLinesForSong($songId);
+        $oldByContent = [];
+
+        foreach ($oldLines as $line) {
+            $oldByContent[$line['content']][] = $line;
+        }
+
+        $assignments = [];
+        $reusedIds = [];
+
+        foreach ($newLines as $line) {
+            $matchingLine = null;
+
+            if (($oldByContent[$line['content']] ?? []) !== []) {
+                $matchingLine = array_shift($oldByContent[$line['content']]);
+            }
+
+            $line['id'] = $matchingLine['id'] ?? null;
+
+            if ($line['id'] !== null) {
+                $reusedIds[(int) $line['id']] = true;
+            }
+
+            $assignments[] = $line;
+        }
+
+        if ($oldLines !== []) {
+            $moveStatement = $this->pdo->prepare(
+                'UPDATE lyric_lines
+                 SET line_number = 1000000000 + id
+                 WHERE song_id = :song_id'
+            );
+            $moveStatement->execute(['song_id' => $songId]);
+        }
+
+        $deleteStatement = $this->pdo->prepare(
+            'DELETE FROM lyric_lines WHERE id = :id AND song_id = :song_id'
+        );
+
+        foreach ($oldLines as $line) {
+            if (!isset($reusedIds[(int) $line['id']])) {
+                $deleteStatement->execute(['id' => $line['id'], 'song_id' => $songId]);
+            }
+        }
+
+        $updateStatement = $this->pdo->prepare(
+            'UPDATE lyric_lines
+             SET line_number = :line_number, content = :content
+             WHERE id = :id AND song_id = :song_id'
+        );
+        $insertStatement = $this->pdo->prepare(
+            'INSERT INTO lyric_lines (song_id, line_number, content)
+             VALUES (:song_id, :line_number, :content)'
+        );
+
+        foreach ($assignments as $line) {
+            $parameters = [
+                'song_id' => $songId,
+                'line_number' => $line['line_number'],
+                'content' => $line['content'],
+            ];
+
+            if ($line['id'] === null) {
+                $insertStatement->execute($parameters);
+                continue;
+            }
+
+            $updateStatement->execute(['id' => $line['id']] + $parameters);
+        }
     }
 }

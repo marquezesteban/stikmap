@@ -1088,6 +1088,10 @@ textarea {
   margin-top: 0;
 }
 
+.marker-lyric-field {
+  grid-column: 1 / -1;
+}
+
 .marker-time-error {
   margin-top: 0.8rem;
 }
@@ -1235,6 +1239,16 @@ textarea {
   overflow: hidden;
   color: var(--muted);
   font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.marker-lyric {
+  overflow: hidden;
+  color: var(--accent-light);
+  font-size: 0.78rem;
+  font-weight: 650;
+  line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

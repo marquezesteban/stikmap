@@ -30,9 +30,10 @@ if ($schema === false) {
 $pdo->exec($schema);
 $songs = new SongRepository($pdo);
 $markers = new MarkerRepository($pdo);
-$songA = $songs->create('Canción A', null, null);
+$songA = $songs->create('Canción A', null, "Primera línea\n\nSegunda línea");
 $songB = $songs->create('Canción B', null, null);
 $types = $markers->types();
+$lyricLines = $songs->lyricLinesForSong($songA);
 
 assertMarkerValue(10, count($types), 'Deben estar disponibles los diez tipos iniciales.');
 
@@ -40,7 +41,8 @@ $fillType = array_values(array_filter(
     $types,
     static fn (array $type): bool => $type['code'] === 'fill'
 ))[0];
-$markers->create($songA, (int) $fillType['id'], 45321, 'Entrada de toms');
+$associatedLineId = (int) $lyricLines[1]['id'];
+$markers->create($songA, (int) $fillType['id'], 45321, 'Entrada de toms', $associatedLineId);
 $editableId = $markers->create($songA, (int) $fillType['id'], 12000, null);
 $markers->create($songB, (int) $fillType['id'], 999, null);
 
@@ -50,6 +52,18 @@ assertMarkerValue(12000, $songMarkers[0]['time_ms'], 'Las marcas deben ordenarse
 assertMarkerValue(45321, $songMarkers[1]['time_ms'], 'Debe conservarse el milisegundo exacto.');
 assertMarkerValue('Fill', $songMarkers[1]['type_label'], 'Debe incluirse el nombre del tipo.');
 assertMarkerValue('Entrada de toms', $songMarkers[1]['note'], 'La nota opcional debe persistirse.');
+assertMarkerValue('Segunda línea', $songMarkers[1]['lyric_line_content'], 'La línea de letra debe asociarse con la marca.');
+assertMarkerValue(true, $markers->lyricLineExistsForSong($associatedLineId, $songA), 'La línea debe pertenecer a la canción correcta.');
+assertMarkerValue(false, $markers->lyricLineExistsForSong($associatedLineId, $songB), 'No deben aceptarse líneas de otra canción.');
+
+$songs->update($songA, 'Canción A', null, "Línea nueva\nPrimera línea\nSegunda línea");
+$afterLyricsEdit = $markers->allForSong($songA);
+assertMarkerValue($associatedLineId, $afterLyricsEdit[1]['lyric_line_id'], 'La asociación debe conservarse si el texto sigue en la letra.');
+assertMarkerValue(3, $afterLyricsEdit[1]['lyric_line_number'], 'La línea asociada debe reflejar su nueva posición.');
+
+$songs->update($songA, 'Canción A', null, "Línea nueva\nPrimera línea");
+$afterLyricsRemoval = $markers->allForSong($songA);
+assertMarkerValue(null, $afterLyricsRemoval[1]['lyric_line_id'], 'La asociación debe quitarse si la línea desaparece.');
 
 $markers->update($editableId, $songA, (int) $fillType['id'], 18000, 'Corregida');
 $edited = $markers->findForSong($editableId, $songA);

@@ -4,6 +4,7 @@
 /** @var array{type: string, message: string}|null $flashMessage */
 /** @var list<array<string, mixed>> $markers */
 /** @var list<array{id: int, code: string, label: string}> $markerTypes */
+/** @var list<array{id: int, line_number: int, content: string}> $lyricLines */
 /** @var array<string, string> $markerErrors */
 /** @var array<string, mixed> $markerInput */
 /** @var int $resumeMs */
@@ -12,6 +13,7 @@ $hasAudio = $song['audio_filename'] !== null;
 $markerFormOpen = $markerErrors !== [];
 $selectedMarkerType = (int) ($markerInput['marker_type_id'] ?? 0);
 $selectedTime = (int) ($markerInput['time_ms'] ?? 0);
+$selectedLyricLineId = (int) ($markerInput['lyric_line_id'] ?? 0);
 $editingMarkerId = (int) ($markerInput['id'] ?? 0);
 $markerCreateAction = appUrl('marker-store', ['id' => (int) $song['id']]);
 $markerFormAction = $editingMarkerId > 0
@@ -178,6 +180,34 @@ $lyrics = trim((string) ($song['lyrics'] ?? ''));
                             <p class="field-error"><?= escape($markerErrors['note']) ?></p>
                         <?php endif; ?>
                     </div>
+
+                    <div class="field-group marker-lyric-field">
+                        <label for="marker-lyric-line">Línea de letra <span class="optional">Opcional</span></label>
+                        <?php if ($lyricLines === []): ?>
+                            <select class="app-input" id="marker-lyric-line" name="lyric_line_id" disabled>
+                                <option value="">Primero agregá la letra de la canción</option>
+                            </select>
+                            <p class="field-help">Podés guardar la marca ahora y asociarla después.</p>
+                        <?php else: ?>
+                            <select
+                                class="app-input<?= isset($markerErrors['lyric_line_id']) ? ' is-invalid' : '' ?>"
+                                id="marker-lyric-line"
+                                name="lyric_line_id"
+                            >
+                                <option value="">Sin línea asociada</option>
+                                <?php foreach ($lyricLines as $line): ?>
+                                    <option value="<?= (int) $line['id'] ?>"<?= $selectedLyricLineId === (int) $line['id'] ? ' selected' : '' ?>>
+                                        <?= escape((string) $line['line_number'] . ' · ' . (string) $line['content']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if (isset($markerErrors['lyric_line_id'])): ?>
+                                <p class="field-error"><?= escape($markerErrors['lyric_line_id']) ?></p>
+                            <?php else: ?>
+                                <p class="field-help">Elegí el verso que te sirve como referencia para tocar.</p>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <?php if (isset($markerErrors['time_ms'])): ?>
@@ -229,6 +259,11 @@ $lyrics = trim((string) ($song['lyrics'] ?? ''));
                                     <?php if ($marker['note'] !== null): ?>
                                         <small><?= escape((string) $marker['note']) ?></small>
                                     <?php endif; ?>
+                                    <?php if ($marker['lyric_line_content'] !== null): ?>
+                                        <span class="marker-lyric">
+                                            <span aria-hidden="true">“</span><?= escape((string) $marker['lyric_line_content']) ?><span aria-hidden="true">”</span>
+                                        </span>
+                                    <?php endif; ?>
                                 </span>
                                 <span class="marker-jump" aria-hidden="true">▶</span>
                             </button>
@@ -242,6 +277,7 @@ $lyrics = trim((string) ($song['lyrics'] ?? ''));
                                     data-time-ms="<?= (int) $marker['time_ms'] ?>"
                                     data-marker-type-id="<?= (int) $marker['marker_type_id'] ?>"
                                     data-note="<?= escape((string) ($marker['note'] ?? '')) ?>"
+                                    data-lyric-line-id="<?= (int) ($marker['lyric_line_id'] ?? 0) ?>"
                                     data-update-action="<?= escape(appUrl('marker-update', ['id' => (int) $song['id'], 'marker_id' => (int) $marker['id']])) ?>"
                                 >Editar</button>
                                 <form

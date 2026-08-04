@@ -160,7 +160,7 @@ final class SongController
     {
         verifyCsrfToken();
         $song = $this->requireSong();
-        [$timeInput, $typeInput, $note, $resumePlaying, $errors, $input] =
+        [$timeInput, $typeInput, $note, $lyricLineId, $resumePlaying, $errors, $input] =
             $this->validatedMarkerInput($song);
 
         if ($errors !== []) {
@@ -173,6 +173,7 @@ final class SongController
             $typeInput,
             $timeInput,
             $note === '' ? null : $note,
+            $lyricLineId,
         );
         flash('success', 'Marca guardada en ' . formatMarkerTime($timeInput) . '.');
         $this->redirectToMarkerTime((int) $song['id'], $timeInput, $resumePlaying);
@@ -183,7 +184,7 @@ final class SongController
         verifyCsrfToken();
         $song = $this->requireSong();
         $marker = $this->requireMarker((int) $song['id']);
-        [$timeInput, $typeInput, $note, $resumePlaying, $errors, $input] =
+        [$timeInput, $typeInput, $note, $lyricLineId, $resumePlaying, $errors, $input] =
             $this->validatedMarkerInput($song);
         $input['id'] = (int) $marker['id'];
 
@@ -198,6 +199,7 @@ final class SongController
             $typeInput,
             $timeInput,
             $note === '' ? null : $note,
+            $lyricLineId,
         );
         flash('success', 'Marca actualizada en ' . formatMarkerTime($timeInput) . '.');
         $this->redirectToMarkerTime((int) $song['id'], $timeInput, $resumePlaying);
@@ -224,7 +226,7 @@ final class SongController
 
     /**
      * @param array<string, mixed> $song
-     * @return array{0: int, 1: int, 2: string, 3: bool, 4: array<string, string>, 5: array<string, mixed>}
+     * @return array{0: int, 1: int, 2: string, 3: int|null, 4: bool, 5: array<string, string>, 6: array<string, mixed>}
      */
     private function validatedMarkerInput(array $song): array
     {
@@ -235,6 +237,10 @@ final class SongController
             'options' => ['min_range' => 1],
         ]);
         $note = trim((string) ($_POST['note'] ?? ''));
+        $lyricLineInput = trim((string) ($_POST['lyric_line_id'] ?? ''));
+        $lyricLineId = $lyricLineInput === ''
+            ? null
+            : filter_var($lyricLineInput, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $resumePlaying = ($_POST['resume_playing'] ?? '0') === '1';
         $errors = [];
 
@@ -252,16 +258,25 @@ final class SongController
             $errors['note'] = 'La nota no puede superar los 240 caracteres.';
         }
 
+        if ($lyricLineInput !== '' && (
+            !is_int($lyricLineId)
+            || !$this->markers->lyricLineExistsForSong($lyricLineId, (int) $song['id'])
+        )) {
+            $errors['lyric_line_id'] = 'Elegí una línea de la letra de esta canción.';
+        }
+
         $input = [
             'time_ms' => is_int($timeInput) ? $timeInput : 0,
             'marker_type_id' => is_int($typeInput) ? $typeInput : 0,
             'note' => $note,
+            'lyric_line_id' => is_int($lyricLineId) ? $lyricLineId : null,
         ];
 
         return [
             is_int($timeInput) ? $timeInput : 0,
             is_int($typeInput) ? $typeInput : 0,
             $note,
+            is_int($lyricLineId) ? $lyricLineId : null,
             $resumePlaying,
             $errors,
             $input,
@@ -312,6 +327,10 @@ final class SongController
             'audioError' => $audioError,
             'markers' => $this->markers->allForSong((int) $song['id']),
             'markerTypes' => $this->markers->types(),
+            'lyricLines' => $this->songs->ensureLyricLinesForSong(
+                (int) $song['id'],
+                isset($song['lyrics']) ? (string) $song['lyrics'] : null,
+            ),
             'markerErrors' => $markerErrors,
             'markerInput' => $markerInput,
             'resumeMs' => is_int($resumeMs) ? $resumeMs : 0,

@@ -34,6 +34,7 @@ $id = $songs->create('Come Together', 'The Beatles', $lyrics);
 assertSameValue(1, $id, 'La canción debe devolver su identificador.');
 assertSameValue('Come Together', $songs->find($id)['title'] ?? null, 'La canción debe poder recuperarse.');
 assertSameValue($lyrics, $songs->find($id)['lyrics'] ?? null, 'La letra debe persistirse respetando sus líneas.');
+assertSameValue(2, count($songs->lyricLinesForSong($id)), 'La letra debe dividirse en líneas seleccionables.');
 assertSameValue(1, count($songs->all()), 'El listado debe incluir la canción creada.');
 
 $songs->updateAudio($id, [
@@ -52,6 +53,9 @@ $updated = $songs->find($id);
 assertSameValue('Come Together (ensayo)', $updated['title'] ?? null, 'El título debe actualizarse.');
 assertSameValue(null, $updated['artist'] ?? null, 'El artista opcional debe aceptar null.');
 assertSameValue($updatedLyrics, $updated['lyrics'] ?? null, 'La letra debe poder actualizarse.');
+$updatedLines = $songs->lyricLinesForSong($id);
+assertSameValue(3, count($updatedLines), 'Las líneas seleccionables deben actualizarse con la letra.');
+assertSameValue('Right now', $updatedLines[1]['content'] ?? null, 'Cada línea debe conservar su contenido.');
 
 $songs->delete($id);
 assertSameValue(null, $songs->find($id), 'La canción debe eliminarse.');
