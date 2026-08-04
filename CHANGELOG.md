@@ -2,6 +2,11 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.4.3] - 2026-08-04
+
+- Corrección del espaciado vertical y horizontal en la lectura de la letra.
+- Conservación exclusiva de los espacios y saltos escritos por el usuario.
+
 ## [0.4.2] - 2026-08-04
 
 - Selector breve para insertar secciones musicales en el punto del cursor.
