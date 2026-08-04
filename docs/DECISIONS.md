@@ -79,3 +79,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** la entrega 4.1 guarda la letra completa en la canción y la presenta respetando su formato. La selección de líneas desde las marcas se implementa por separado en la entrega 4.2.
 
 **Motivo:** probar primero el ingreso, la persistencia y la lectura en pantallas táctiles antes de sumar relaciones entre letra y mapa temporal.
+
+## D-014 — Asociación de marcas por identidad de línea
+
+**Decisión:** cada línea no vacía de la letra tiene una identidad interna y una posición visible. Las marcas guardan opcionalmente esa identidad. Al editar la letra, las líneas con el mismo texto conservan su identidad aunque cambien de posición; las que desaparecen se desvinculan sin eliminar la marca.
+
+**Motivo:** evitar que insertar un verso al comienzo mueva silenciosamente las referencias y proteger siempre el mapa temporal del baterista.

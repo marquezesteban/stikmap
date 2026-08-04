@@ -2,6 +2,14 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.4.1] - 2026-08-03
+
+- División de la letra en líneas seleccionables, omitiendo espacios vacíos.
+- Asociación opcional de una línea al crear o editar una marca.
+- Línea asociada visible dentro del mapa temporal.
+- Conservación de asociaciones cuando una línea mantiene su texto aunque cambie de posición.
+- Desvinculación segura cuando una línea asociada se elimina de la letra.
+
 ## [0.4.0] - 2026-08-03
 
 - Carga y edición opcional de la letra desde el formulario de canción.
