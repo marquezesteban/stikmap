@@ -173,5 +173,6 @@ Un sprint se considera terminado solamente cuando:
 - **Sprint 4 — Letra:** pegado, división en líneas y asociación opcional con marcas.
   - **Entrega 4.1 — carga y lectura:** terminada. Incluye pegado, edición, persistencia y lectura responsive respetando los saltos de línea.
   - **Entrega 4.2 — asociación con marcas:** terminada. Permite elegir, cambiar o quitar una línea al crear o editar una marca, y verla dentro del mapa temporal.
+  - **Entrega 4.3 — secciones musicales:** terminada. Permite insertar etiquetas entre corchetes, numerar versos y usar las secciones como referencia de una marca.
 - **Sprint 5 — Impresión:** machete compacto, legible y preparado para papel.
 - **Cierre del MVP:** pruebas integrales, correcciones y documentación de instalación.

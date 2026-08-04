@@ -85,3 +85,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** cada línea no vacía de la letra tiene una identidad interna y una posición visible. Las marcas guardan opcionalmente esa identidad. Al editar la letra, las líneas con el mismo texto conservan su identidad aunque cambien de posición; las que desaparecen se desvinculan sin eliminar la marca.
 
 **Motivo:** evitar que insertar un verso al comienzo mueva silenciosamente las referencias y proteger siempre el mapa temporal del baterista.
+
+## D-015 — Secciones musicales explícitas en la letra
+
+**Decisión:** las anotaciones escritas en una línea propia entre corchetes, como `[VERSO 1]` o `[INSTRUMENTAL CON FILL]`, se consideran secciones musicales. El editor ofrece diez nombres frecuentes, pero las etiquetas continúan siendo texto editable.
+
+**Motivo:** representar entradas, fills y pasajes sin letra sin intentar adivinar automáticamente la estructura de cada canción.

@@ -2,6 +2,13 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.4.2] - 2026-08-04
+
+- Selector breve para insertar secciones musicales en el punto del cursor.
+- Numeración automática de etiquetas `[VERSO 1]`, `[VERSO 2]` y siguientes.
+- Reconocimiento de anotaciones personalizadas escritas entre corchetes.
+- Secciones destacadas en la lectura de la letra y diferenciadas en las marcas.
+
 ## [0.4.1] - 2026-08-03
 
 - División de la letra en líneas seleccionables, omitiendo espacios vacíos.
