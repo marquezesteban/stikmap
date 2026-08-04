@@ -58,7 +58,7 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 
 ## D-010 — Autoría y licencia visibles
 
-**Decisión:** todas las pantallas incluyen un pie discreto con la atribución `Diseñado y creado por Esteban Marquez · © 2026` y un enlace a la licencia GNU AGPL v3.
+**Decisión:** todas las pantallas incluyen un pie discreto con la atribución `Diseñado y creado por Esteban Marquez · © 2026`, el correo `marquezesteban@gmail.com` y un enlace a la licencia GNU AGPL v3.
 
 **Motivo:** conservar la autoría y hacer que las condiciones del código sean fáciles de encontrar sin interferir con el uso de la aplicación.
 

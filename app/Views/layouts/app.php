@@ -31,10 +31,15 @@ $pageScripts = $pageScripts ?? [];
 
     <footer class="app-footer">
         <div class="container app-shell app-footer-content">
-            <span>Diseñado y creado por Esteban Marquez · © 2026</span>
-            <a href="https://github.com/marquezesteban/stikmap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
-                Código bajo GNU AGPL v3
-            </a>
+            <div class="app-footer-author">
+                <span>Diseñado y creado por Esteban Marquez · © 2026</span>
+                <a href="mailto:marquezesteban@gmail.com">marquezesteban@gmail.com</a>
+            </div>
+            <div class="app-footer-legal">
+                <a href="https://github.com/marquezesteban/stikmap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
+                    Código bajo GNU AGPL v3
+                </a>
+            </div>
         </div>
     </footer>
 

@@ -121,6 +121,14 @@ textarea {
   padding-bottom: 1rem;
 }
 
+.app-footer-author,
+.app-footer-legal {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+}
+
 .app-footer a {
   color: var(--muted);
   text-decoration-color: rgba(168, 164, 157, 0.45);
