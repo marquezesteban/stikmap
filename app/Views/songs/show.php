@@ -20,6 +20,8 @@ $markerFormAction = $editingMarkerId > 0
     ? appUrl('marker-update', ['id' => (int) $song['id'], 'marker_id' => $editingMarkerId])
     : $markerCreateAction;
 $lyrics = trim((string) ($song['lyrics'] ?? ''));
+$lyricsDisplayLines = $lyrics === '' ? [] : preg_split('/\R/u', $lyrics);
+$lyricsDisplayLines = $lyricsDisplayLines === false ? [] : $lyricsDisplayLines;
 ?>
 <section class="song-workspace">
     <a class="back-link" href="<?= escape(appUrl()) ?>"><span aria-hidden="true">←</span> Canciones</a>
@@ -197,7 +199,11 @@ $lyrics = trim((string) ($song['lyrics'] ?? ''));
                                 <option value="">Sin línea asociada</option>
                                 <?php foreach ($lyricLines as $line): ?>
                                     <option value="<?= (int) $line['id'] ?>"<?= $selectedLyricLineId === (int) $line['id'] ? ' selected' : '' ?>>
-                                        <?= escape((string) $line['line_number'] . ' · ' . (string) $line['content']) ?>
+                                        <?php if (isLyricSection((string) $line['content'])): ?>
+                                            <?= escape('SECCIÓN · ' . lyricSectionLabel((string) $line['content'])) ?>
+                                        <?php else: ?>
+                                            <?= escape('LETRA ' . (string) $line['line_number'] . ' · ' . (string) $line['content']) ?>
+                                        <?php endif; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -260,8 +266,13 @@ $lyrics = trim((string) ($song['lyrics'] ?? ''));
                                         <small><?= escape((string) $marker['note']) ?></small>
                                     <?php endif; ?>
                                     <?php if ($marker['lyric_line_content'] !== null): ?>
-                                        <span class="marker-lyric">
-                                            <span aria-hidden="true">“</span><?= escape((string) $marker['lyric_line_content']) ?><span aria-hidden="true">”</span>
+                                        <?php $associatedSection = isLyricSection((string) $marker['lyric_line_content']); ?>
+                                        <span class="marker-lyric<?= $associatedSection ? ' is-section' : '' ?>">
+                                            <?php if ($associatedSection): ?>
+                                                Sección · <?= escape(lyricSectionLabel((string) $marker['lyric_line_content'])) ?>
+                                            <?php else: ?>
+                                                <span aria-hidden="true">“</span><?= escape((string) $marker['lyric_line_content']) ?><span aria-hidden="true">”</span>
+                                            <?php endif; ?>
                                         </span>
                                     <?php endif; ?>
                                 </span>
@@ -324,7 +335,14 @@ $lyrics = trim((string) ($song['lyrics'] ?? ''));
                 <span>Podés pegarla completa y conservar sus versos para el próximo paso: asociarlos con las marcas.</span>
             </div>
         <?php else: ?>
-            <div class="lyrics-content"><?= escape($lyrics) ?></div>
+            <div class="lyrics-content">
+                <?php foreach ($lyricsDisplayLines as $line): ?>
+                    <?php $isSection = isLyricSection($line); ?>
+                    <div class="lyrics-line<?= $isSection ? ' is-section' : ($line === '' ? ' is-empty' : '') ?>">
+                        <?= $isSection ? escape(lyricSectionLabel($line)) : escape($line) ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php endif; ?>
     </section>
 </section>

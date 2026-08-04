@@ -65,6 +65,22 @@
 
         <div class="field-group">
             <label for="lyrics">Letra <span class="optional">Opcional</span></label>
+            <div class="lyrics-tools" data-lyrics-tools>
+                <select class="lyrics-section-select" data-lyrics-section aria-label="Sección para insertar">
+                    <option value="">Agregar sección…</option>
+                    <option value="INTRO">Intro</option>
+                    <option value="VERSO" data-numbered>Verso</option>
+                    <option value="PRE-ESTRIBILLO">Pre-estribillo</option>
+                    <option value="ESTRIBILLO">Estribillo</option>
+                    <option value="PUENTE">Puente</option>
+                    <option value="INSTRUMENTAL">Instrumental</option>
+                    <option value="SOLO">Solo</option>
+                    <option value="CORTE">Corte</option>
+                    <option value="INTERLUDIO">Interludio</option>
+                    <option value="FINAL">Final</option>
+                </select>
+                <button class="lyrics-insert-button" type="button" data-lyrics-insert disabled>Insertar</button>
+            </div>
             <textarea
                 class="app-input lyrics-input<?= isset($errors['lyrics']) ? ' is-invalid' : '' ?>"
                 id="lyrics"
@@ -78,7 +94,7 @@
             <?php if (isset($errors['lyrics'])): ?>
                 <p class="field-error" id="lyrics-error"><?= escape($errors['lyrics']) ?></p>
             <?php else: ?>
-                <p class="field-help" id="lyrics-help">Conservaremos los versos y espacios tal como los pegues.</p>
+                <p class="field-help" id="lyrics-help">Conservaremos los versos y espacios. Las secciones se insertan entre corchetes y también pueden editarse a mano.</p>
             <?php endif; ?>
         </div>
 

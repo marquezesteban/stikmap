@@ -110,6 +110,16 @@ function formatMarkerTime(int $milliseconds): string
     return sprintf('%d:%02d.%03d', $minutes, $seconds, $remainder);
 }
 
+function isLyricSection(string $line): bool
+{
+    return preg_match('/^\[[^\[\]\r\n]{1,80}\]$/u', trim($line)) === 1;
+}
+
+function lyricSectionLabel(string $line): string
+{
+    return trim(trim($line), '[]');
+}
+
 /**
  * @param array<string, mixed> $data
  */

@@ -546,6 +546,47 @@ textarea {
   resize: vertical;
 }
 
+.lyrics-tools {
+  margin-bottom: 0.65rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+}
+
+.lyrics-section-select,
+.lyrics-insert-button {
+  min-height: 2.85rem;
+  border: 1px solid #3c4143;
+  border-radius: 0.7rem;
+  outline: none;
+  color: var(--ink);
+  background: #141719;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.lyrics-section-select {
+  min-width: 0;
+  padding: 0.55rem 0.75rem;
+}
+
+.lyrics-insert-button {
+  padding: 0.55rem 0.9rem;
+  color: #171717;
+  background: var(--accent);
+}
+
+.lyrics-section-select:focus,
+.lyrics-insert-button:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem var(--focus);
+}
+
+.lyrics-insert-button:disabled {
+  cursor: default;
+  opacity: 0.42;
+}
+
 .field-help,
 .field-error {
   margin: 0.5rem 0 0;
@@ -648,6 +689,34 @@ textarea {
   line-height: 1.8;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
+}
+
+.lyrics-line {
+  min-height: 1.8em;
+}
+
+.lyrics-line.is-empty {
+  min-height: 1.35em;
+}
+
+.lyrics-line.is-section {
+  width: fit-content;
+  min-height: 0;
+  margin: 1.55rem 0 0.65rem;
+  padding: 0.32rem 0.55rem;
+  border: 1px solid rgba(255, 132, 96, 0.3);
+  border-radius: 0.45rem;
+  color: var(--accent-light);
+  background: rgba(255, 107, 69, 0.08);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.09em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.lyrics-line.is-section:first-child {
+  margin-top: 0;
 }
 
 .lyrics-empty {
@@ -1251,6 +1320,11 @@ textarea {
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.marker-lyric.is-section {
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
 }
 
 .marker-jump {
