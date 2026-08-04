@@ -2,6 +2,13 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.5.1] - 2026-08-04
+
+- Rediseño de la impresión como cancionero con la letra completa.
+- Indicaciones de tiempo, tipo y nota ubicadas encima de la línea o sección asociada.
+- Bloque final que identifica marcas todavía sin ubicación dentro de la letra.
+- Vista temporal conservada como alternativa para canciones sin letra.
+
 ## [0.5.0] - 2026-08-04
 
 - Vista de machete independiente del reproductor y preparada para A4.

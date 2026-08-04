@@ -61,10 +61,14 @@ El botón **Marcar ahora** captura el instante actual sin detener automáticamen
 
 Tocar una marca del listado o su punto de color lleva el reproductor a ese instante. Desde el mismo punto se puede abrir su edición.
 
-## Machete imprimible
+## Cancionero imprimible
 
-Desde la canción, el botón **Imprimir machete** abre una hoja independiente del reproductor. Incluye el título, artista y todas las marcas ordenadas con su tiempo, tipo, nota y referencia de letra o sección.
+Desde la canción, el botón **Imprimir cancionero** abre una hoja independiente del reproductor. La letra completa funciona como guía y cada marca aparece encima de la línea o sección asociada, mostrando tiempo, tipo y nota.
+
+Las marcas sin una línea asociada se incluyen al final bajo **Marcas sin ubicación en la letra**. Para integrarlas al recorrido de lectura, hay que editarlas y seleccionar la línea o sección donde ocurren.
+
+Si una canción no tiene letra, StikMap imprime como alternativa una lista cronológica de sus marcas.
 
 El botón **Imprimir o guardar PDF** abre las opciones disponibles en el dispositivo. Desde una computadora se puede elegir una impresora o **Guardar como PDF**. Desde un teléfono se utiliza el menú de impresión o compartir ofrecido por el sistema.
 
-La hoja está preparada para tamaño A4 y evita dividir una marca entre dos páginas.
+La hoja está preparada para tamaño A4 y evita separar una indicación de la línea a la que pertenece.

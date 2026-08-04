@@ -92,8 +92,8 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 
 **Motivo:** representar entradas, fills y pasajes sin letra sin intentar adivinar automáticamente la estructura de cada canción.
 
-## D-016 — Machete como vista cronológica independiente
+## D-016 — Cancionero anotado como vista de impresión
 
-**Decisión:** la impresión usa una vista clara separada del reproductor, ordena las marcas por tiempo y muestra solamente título, artista, tipo, nota y referencia de letra o sección. Cada marca evita cortarse entre páginas.
+**Decisión:** la impresión usa la letra completa como eje y coloca cada marca encima de la línea o sección asociada. Las marcas sin asociación se informan aparte y las canciones sin letra conservan una lista cronológica alternativa.
 
-**Motivo:** producir una guía rápida para tocar, legible en atril y con bajo consumo de tinta, sin trasladar controles interactivos al papel.
+**Motivo:** permitir que el baterista siga la canción leyendo y encuentre cada indicación en contexto, sin depender de recordar constantemente el minuto y segundo actual.
