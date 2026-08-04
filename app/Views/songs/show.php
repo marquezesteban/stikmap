@@ -237,6 +237,7 @@ $markerFormAction = $editingMarkerId > 0
                                     class="marker-action"
                                     type="button"
                                     data-marker-edit
+                                    data-marker-id="<?= (int) $marker['id'] ?>"
                                     data-time-ms="<?= (int) $marker['time_ms'] ?>"
                                     data-marker-type-id="<?= (int) $marker['marker_type_id'] ?>"
                                     data-note="<?= escape((string) ($marker['note'] ?? '')) ?>"

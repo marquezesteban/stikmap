@@ -129,6 +129,7 @@ Un sprint se considera terminado solamente cuando:
 - Salto al instante al tocar tanto el punto como la fila del listado.
 - Campo de tiempo editable con precisión de milisegundos y validación contra la duración del audio.
 - Forma de onda más alta, puntos sin recorte y menú contextual deshabilitado sobre ellos.
+- Apertura directa de la edición al tocar un punto de color sobre la onda.
 
 **Alcance propuesto:**
 

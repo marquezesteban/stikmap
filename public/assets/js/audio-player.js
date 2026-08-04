@@ -286,5 +286,9 @@
     if (event.button !== 0) return;
     wavesurfer.setTime(region.start);
     current.textContent = formatTime(region.start);
+
+    const markerId = String(region.id).replace(/^marker-/, '');
+    const editButton = document.querySelector(`[data-marker-edit][data-marker-id="${markerId}"]`);
+    editButton?.click();
   });
 })();
