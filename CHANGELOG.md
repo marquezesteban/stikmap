@@ -2,6 +2,11 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.4.4] - 2026-08-04
+
+- Nuevo manual de uso enlazado desde el README.
+- Documentación de la sintaxis entre corchetes, ejemplos y asociaciones con marcas.
+
 ## [0.4.3] - 2026-08-04
 
 - Corrección del espaciado vertical y horizontal en la lectura de la letra.

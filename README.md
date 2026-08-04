@@ -19,9 +19,10 @@ No incluye autenticación, usuarios ni servicios en la nube.
 
 - [Sprints](docs/SPRINTS.md): alcance, criterios de aceptación, pruebas y commits.
 - [Decisiones](docs/DECISIONS.md): criterios de producto y arquitectura que protegen el foco del MVP.
+- [Manual de uso](docs/MANUAL.md): canciones, letras, secciones entre corchetes y marcas.
 - [Historial de versiones](CHANGELOG.md): avances publicados y criterio de numeración.
 
-Versión actual: **v0.4.3**. Los Sprints 0 a 4 están terminados; la letra admite secciones musicales y puede asociarse opcionalmente con las marcas. El próximo avance será la vista imprimible del Sprint 5.
+Versión actual: **v0.4.4**. Los Sprints 0 a 4 están terminados; la letra admite secciones musicales y puede asociarse opcionalmente con las marcas. El próximo avance será la vista imprimible del Sprint 5.
 
 ## Stack
 
