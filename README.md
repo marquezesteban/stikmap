@@ -19,8 +19,9 @@ No incluye autenticación, usuarios ni servicios en la nube.
 
 - [Sprints](docs/SPRINTS.md): alcance, criterios de aceptación, pruebas y commits.
 - [Decisiones](docs/DECISIONS.md): criterios de producto y arquitectura que protegen el foco del MVP.
+- [Historial de versiones](CHANGELOG.md): avances publicados y criterio de numeración.
 
-Estado actual: Sprints 0, 1 y 2 terminados. El Sprint 3 está en desarrollo; ya incluye zoom táctil y creación, listado, edición y eliminación de marcas visibles sobre la onda.
+Versión actual: **v0.3.2**. Los Sprints 0 a 3 están terminados y probados. El próximo avance será el Sprint 4, dedicado a la letra y su asociación opcional con las marcas.
 
 ## Stack
 

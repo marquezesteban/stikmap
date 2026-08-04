@@ -129,6 +129,12 @@ textarea {
   gap: 0.35rem 0.75rem;
 }
 
+.app-version {
+  color: var(--accent-light);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
 .app-footer a {
   color: var(--muted);
   text-decoration-color: rgba(168, 164, 157, 0.45);

@@ -36,6 +36,7 @@ $pageScripts = $pageScripts ?? [];
                 <a href="mailto:marquezesteban@gmail.com">marquezesteban@gmail.com</a>
             </div>
             <div class="app-footer-legal">
+                <span class="app-version" aria-label="Versión <?= escape(appVersion()) ?>">v<?= escape(appVersion()) ?></span>
                 <a href="https://github.com/marquezesteban/stikmap/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">
                     Código bajo GNU AGPL v3
                 </a>

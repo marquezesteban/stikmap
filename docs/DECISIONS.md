@@ -67,3 +67,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** las URLs de CSS y JavaScript propios incluyen la fecha de modificación del archivo como versión.
 
 **Motivo:** evitar que navegadores de escritorio, tablets o teléfonos conserven una interfaz anterior después de una actualización local.
+
+## D-012 — Versionado del producto durante el MVP
+
+**Decisión:** StikMap usa versionado semántico desde `v0.3.2`. Cada sprint principal incrementa la versión menor, las mejoras o correcciones incrementan el parche y `v1.0.0` queda reservado para el MVP completo, probado y documentado.
+
+**Motivo:** identificar con claridad qué avance está instalado, mantener un historial entendible y facilitar futuras actualizaciones.
