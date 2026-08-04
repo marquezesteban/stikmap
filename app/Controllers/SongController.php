@@ -26,6 +26,7 @@ final class SongController
             'id' => null,
             'title' => '',
             'artist' => '',
+            'lyrics' => '',
         ]);
     }
 
@@ -37,14 +38,23 @@ final class SongController
     public function store(): void
     {
         verifyCsrfToken();
-        [$title, $artist, $errors] = $this->validatedInput();
+        [$title, $artist, $lyrics, $errors] = $this->validatedInput();
 
         if ($errors !== []) {
-            $this->renderForm(['id' => null, 'title' => $title, 'artist' => $artist], $errors);
+            $this->renderForm([
+                'id' => null,
+                'title' => $title,
+                'artist' => $artist,
+                'lyrics' => $lyrics,
+            ], $errors);
             return;
         }
 
-        $songId = $this->songs->create($title, $artist === '' ? null : $artist);
+        $songId = $this->songs->create(
+            $title,
+            $artist === '' ? null : $artist,
+            $lyrics === '' ? null : $lyrics,
+        );
         $audioFile = $_FILES['audio'] ?? [];
 
         if ($this->hasAudioUpload($audioFile)) {
@@ -59,7 +69,12 @@ final class SongController
             } catch (AudioUploadException $exception) {
                 $this->songs->delete($songId);
                 $errors['audio'] = $exception->getMessage();
-                $this->renderForm(['id' => null, 'title' => $title, 'artist' => $artist], $errors);
+                $this->renderForm([
+                    'id' => null,
+                    'title' => $title,
+                    'artist' => $artist,
+                    'lyrics' => $lyrics,
+                ], $errors);
                 return;
             } catch (Throwable $exception) {
                 $this->audioUploads->delete($newAudio['filename'] ?? null);
@@ -85,18 +100,24 @@ final class SongController
     {
         verifyCsrfToken();
         $song = $this->requireSong();
-        [$title, $artist, $errors] = $this->validatedInput();
+        [$title, $artist, $lyrics, $errors] = $this->validatedInput();
 
         if ($errors !== []) {
             $song['title'] = $title;
             $song['artist'] = $artist;
+            $song['lyrics'] = $lyrics;
             $this->renderForm($song, $errors);
             return;
         }
 
-        $this->songs->update((int) $song['id'], $title, $artist === '' ? null : $artist);
+        $this->songs->update(
+            (int) $song['id'],
+            $title,
+            $artist === '' ? null : $artist,
+            $lyrics === '' ? null : $lyrics,
+        );
         flash('success', 'Cambios guardados.');
-        redirectTo();
+        redirectTo('show', ['id' => (int) $song['id']]);
     }
 
     public function destroy(): void
@@ -305,12 +326,13 @@ final class SongController
     }
 
     /**
-     * @return array{0: string, 1: string, 2: array<string, string>}
+     * @return array{0: string, 1: string, 2: string, 3: array<string, string>}
      */
     private function validatedInput(): array
     {
         $title = trim((string) ($_POST['title'] ?? ''));
         $artist = trim((string) ($_POST['artist'] ?? ''));
+        $lyrics = trim(str_replace(["\r\n", "\r"], "\n", (string) ($_POST['lyrics'] ?? '')));
         $errors = [];
 
         if ($title === '') {
@@ -323,7 +345,11 @@ final class SongController
             $errors['artist'] = 'El artista no puede superar los 120 caracteres.';
         }
 
-        return [$title, $artist, $errors];
+        if (mb_strlen($lyrics) > 50000) {
+            $errors['lyrics'] = 'La letra no puede superar los 50.000 caracteres.';
+        }
+
+        return [$title, $artist, $lyrics, $errors];
     }
 
     /**

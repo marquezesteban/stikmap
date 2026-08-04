@@ -10,7 +10,7 @@
         <p class="eyebrow mb-2"><?= $isEditing ? 'Ajustar datos' : 'Sumar al repertorio' ?></p>
         <h1 class="display-title mb-2"><?= $isEditing ? 'Editar canción' : 'Nueva canción' ?></h1>
         <p class="page-subtitle mb-0">
-            <?= $isEditing ? 'Actualizá los datos principales.' : 'Completá lo esencial y, si querés, sumá el audio ahora.' ?>
+            <?= $isEditing ? 'Actualizá los datos y la letra.' : 'Completá lo esencial y, si querés, sumá la letra y el audio ahora.' ?>
         </p>
     </div>
 
@@ -60,6 +60,25 @@
                 <p class="field-error" id="artist-error"><?= escape($errors['artist']) ?></p>
             <?php else: ?>
                 <p class="field-help" id="artist-help">Podés dejarlo vacío y completarlo después.</p>
+            <?php endif; ?>
+        </div>
+
+        <div class="field-group">
+            <label for="lyrics">Letra <span class="optional">Opcional</span></label>
+            <textarea
+                class="app-input lyrics-input<?= isset($errors['lyrics']) ? ' is-invalid' : '' ?>"
+                id="lyrics"
+                name="lyrics"
+                maxlength="50000"
+                rows="14"
+                spellcheck="true"
+                placeholder="Pegá acá la letra respetando sus líneas…"
+                aria-describedby="<?= isset($errors['lyrics']) ? 'lyrics-error' : 'lyrics-help' ?>"
+            ><?= escape((string) ($song['lyrics'] ?? '')) ?></textarea>
+            <?php if (isset($errors['lyrics'])): ?>
+                <p class="field-error" id="lyrics-error"><?= escape($errors['lyrics']) ?></p>
+            <?php else: ?>
+                <p class="field-help" id="lyrics-help">Conservaremos los versos y espacios tal como los pegues.</p>
             <?php endif; ?>
         </div>
 

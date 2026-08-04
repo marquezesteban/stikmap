@@ -39,30 +39,35 @@ final class SongRepository
         return $song === false ? null : $song;
     }
 
-    public function create(string $title, ?string $artist): int
+    public function create(string $title, ?string $artist, ?string $lyrics): int
     {
         $statement = $this->pdo->prepare(
-            'INSERT INTO songs (title, artist) VALUES (:title, :artist)'
+            'INSERT INTO songs (title, artist, lyrics) VALUES (:title, :artist, :lyrics)'
         );
         $statement->execute([
             'title' => $title,
             'artist' => $artist,
+            'lyrics' => $lyrics,
         ]);
 
         return (int) $this->pdo->lastInsertId();
     }
 
-    public function update(int $id, string $title, ?string $artist): bool
+    public function update(int $id, string $title, ?string $artist, ?string $lyrics): bool
     {
         $statement = $this->pdo->prepare(
             'UPDATE songs
-             SET title = :title, artist = :artist, updated_at = CURRENT_TIMESTAMP
+             SET title = :title,
+                 artist = :artist,
+                 lyrics = :lyrics,
+                 updated_at = CURRENT_TIMESTAMP
              WHERE id = :id'
         );
         $statement->execute([
             'id' => $id,
             'title' => $title,
             'artist' => $artist,
+            'lyrics' => $lyrics,
         ]);
 
         return $statement->rowCount() > 0;

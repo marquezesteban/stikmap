@@ -30,8 +30,8 @@ if ($schema === false) {
 $pdo->exec($schema);
 $songs = new SongRepository($pdo);
 $markers = new MarkerRepository($pdo);
-$songA = $songs->create('Canción A', null);
-$songB = $songs->create('Canción B', null);
+$songA = $songs->create('Canción A', null, null);
+$songB = $songs->create('Canción B', null, null);
 $types = $markers->types();
 
 assertMarkerValue(10, count($types), 'Deben estar disponibles los diez tipos iniciales.');

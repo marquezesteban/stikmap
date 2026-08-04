@@ -17,6 +17,7 @@ $markerCreateAction = appUrl('marker-store', ['id' => (int) $song['id']]);
 $markerFormAction = $editingMarkerId > 0
     ? appUrl('marker-update', ['id' => (int) $song['id'], 'marker_id' => $editingMarkerId])
     : $markerCreateAction;
+$lyrics = trim((string) ($song['lyrics'] ?? ''));
 ?>
 <section class="song-workspace">
     <a class="back-link" href="<?= escape(appUrl()) ?>"><span aria-hidden="true">←</span> Canciones</a>
@@ -269,4 +270,25 @@ $markerFormAction = $editingMarkerId > 0
             </div>
         </details>
     <?php endif; ?>
+
+    <section class="lyrics-panel" aria-labelledby="lyrics-title">
+        <div class="lyrics-heading">
+            <div>
+                <p class="eyebrow mb-1">Guía de la canción</p>
+                <h2 id="lyrics-title">Letra</h2>
+            </div>
+            <a class="lyrics-edit" href="<?= escape(appUrl('edit', ['id' => (int) $song['id']])) ?>">
+                <?= $lyrics === '' ? 'Agregar letra' : 'Editar letra' ?>
+            </a>
+        </div>
+
+        <?php if ($lyrics === ''): ?>
+            <div class="lyrics-empty">
+                <p>Todavía no cargaste la letra.</p>
+                <span>Podés pegarla completa y conservar sus versos para el próximo paso: asociarlos con las marcas.</span>
+            </div>
+        <?php else: ?>
+            <div class="lyrics-content"><?= escape($lyrics) ?></div>
+        <?php endif; ?>
+    </section>
 </section>

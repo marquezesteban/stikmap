@@ -29,9 +29,11 @@ if ($schema === false) {
 $pdo->exec($schema);
 $songs = new SongRepository($pdo);
 
-$id = $songs->create('Come Together', 'The Beatles');
+$lyrics = "Here come old flat top\nHe come grooving up slowly";
+$id = $songs->create('Come Together', 'The Beatles', $lyrics);
 assertSameValue(1, $id, 'La canción debe devolver su identificador.');
 assertSameValue('Come Together', $songs->find($id)['title'] ?? null, 'La canción debe poder recuperarse.');
+assertSameValue($lyrics, $songs->find($id)['lyrics'] ?? null, 'La letra debe persistirse respetando sus líneas.');
 assertSameValue(1, count($songs->all()), 'El listado debe incluir la canción creada.');
 
 $songs->updateAudio($id, [
@@ -44,10 +46,12 @@ $withAudio = $songs->find($id);
 assertSameValue('song-1-test.mp3', $withAudio['audio_filename'] ?? null, 'El MP3 debe asociarse a la canción.');
 assertSameValue(1024, $withAudio['audio_size_bytes'] ?? null, 'El tamaño del MP3 debe persistirse.');
 
-$songs->update($id, 'Come Together (ensayo)', null);
+$updatedLyrics = "Come together\nRight now\nOver me";
+$songs->update($id, 'Come Together (ensayo)', null, $updatedLyrics);
 $updated = $songs->find($id);
 assertSameValue('Come Together (ensayo)', $updated['title'] ?? null, 'El título debe actualizarse.');
 assertSameValue(null, $updated['artist'] ?? null, 'El artista opcional debe aceptar null.');
+assertSameValue($updatedLyrics, $updated['lyrics'] ?? null, 'La letra debe poder actualizarse.');
 
 $songs->delete($id);
 assertSameValue(null, $songs->find($id), 'La canción debe eliminarse.');
