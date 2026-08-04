@@ -111,7 +111,21 @@ $markerFormAction = $editingMarkerId > 0
             <div class="marker-composer-heading">
                 <div>
                     <p class="eyebrow mb-1" data-marker-mode><?= $editingMarkerId > 0 ? 'Editar marca' : 'Nueva marca' ?></p>
-                    <h2>Instante <span data-marker-time-label><?= escape(formatMarkerTime($selectedTime)) ?></span></h2>
+                    <div class="marker-time-editor-row">
+                        <h2>Instante</h2>
+                        <input
+                            class="marker-time-editor"
+                            type="text"
+                            value="<?= escape(formatMarkerTime($selectedTime)) ?>"
+                            inputmode="decimal"
+                            pattern="[0-9]+:[0-5][0-9]([.,][0-9]{1,3})?"
+                            title="Usá el formato minutos:segundos.milisegundos, por ejemplo 1:23.456"
+                            aria-label="Tiempo exacto de la marca"
+                            data-marker-time-editor
+                            required
+                        >
+                    </div>
+                    <small class="marker-time-help">Formato: 1:23.456</small>
                     <button class="marker-use-current" type="button" data-marker-use-current>
                         Usar posición actual
                     </button>

@@ -731,8 +731,8 @@ textarea {
 }
 
 .waveform-shell {
-  min-height: 8.8rem;
-  padding: 0.85rem 0;
+  min-height: 12rem;
+  padding: 1rem 0;
   display: grid;
   place-items: center;
   position: relative;
@@ -919,9 +919,40 @@ textarea {
   letter-spacing: -0.035em;
 }
 
-.marker-composer-heading h2 span {
+.marker-time-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.marker-time-editor {
+  width: 8.5rem;
+  min-height: 2.4rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #3c4143;
+  border-radius: 0.55rem;
+  outline: none;
   color: var(--accent-light);
+  background: #141719;
   font-variant-numeric: tabular-nums;
+  font-size: 1rem;
+  font-weight: 760;
+}
+
+.marker-time-editor:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem var(--focus);
+}
+
+.marker-time-editor:invalid {
+  border-color: var(--danger);
+}
+
+.marker-time-help {
+  margin-top: 0.35rem;
+  display: block;
+  color: #777b7c;
+  font-size: 0.68rem;
 }
 
 .marker-use-current {

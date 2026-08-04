@@ -14,7 +14,7 @@
   const markerCapture = player.querySelector('[data-marker-capture]');
   const markerComposer = document.querySelector('[data-marker-composer]');
   const markerTimeInput = markerComposer?.querySelector('[data-marker-time-input]');
-  const markerTimeLabel = markerComposer?.querySelector('[data-marker-time-label]');
+  const markerTimeEditor = markerComposer?.querySelector('[data-marker-time-editor]');
   const markerResumePlaying = markerComposer?.querySelector('[data-marker-resume-playing]');
   const markerForm = markerComposer?.querySelector('form');
   const markerMode = markerComposer?.querySelector('[data-marker-mode]');
@@ -37,6 +37,14 @@
     return `${minutes}:${String(seconds).padStart(2, '0')}.${String(remainder).padStart(3, '0')}`;
   };
 
+  const parsePreciseTime = (value) => {
+    const match = String(value).trim().match(/^(\d+):([0-5]\d)(?:[.,](\d{1,3}))?$/);
+    if (!match) return null;
+
+    const milliseconds = String(match[3] || '').padEnd(3, '0');
+    return (Number(match[1]) * 60 + Number(match[2])) * 1000 + Number(milliseconds || 0);
+  };
+
   if (typeof window.WaveSurfer === 'undefined') {
     loading.hidden = true;
     error.hidden = false;
@@ -47,7 +55,7 @@
   const wavesurfer = window.WaveSurfer.create({
     container: '#waveform',
     url: player.dataset.audioUrl,
-    height: 112,
+    height: 160,
     waveColor: '#5f6466',
     progressColor: '#ff6b45',
     cursorColor: '#f5f1e8',
@@ -92,16 +100,19 @@
         markerPoint.title = `${button.dataset.markerLabel} · ${formatPreciseTime(button.dataset.markerSeek)}`;
         markerPoint.setAttribute('aria-label', markerPoint.title);
         Object.assign(markerPoint.style, {
-          width: '14px',
-          height: '14px',
+          width: '16px',
+          height: '16px',
           display: 'block',
           border: '2px solid #111315',
           borderRadius: '50%',
           background: color,
           boxShadow: `0 0 0 3px ${color}33`,
           cursor: 'pointer',
-          transform: 'translate(-50%, -50%)',
+          transform: 'translate(-50%, 10px)',
+          userSelect: 'none',
+          webkitTouchCallout: 'none',
         });
+        markerPoint.addEventListener('contextmenu', (event) => event.preventDefault());
 
         regions.addRegion({
           id: `marker-${button.dataset.markerId}`,
@@ -179,7 +190,8 @@
     const timeMs = Math.round(wavesurfer.getCurrentTime() * 1000);
     markerForm.action = markerForm.dataset.createAction;
     markerTimeInput.value = String(timeMs);
-    markerTimeLabel.textContent = formatPreciseTime(timeMs);
+    markerTimeEditor.value = formatPreciseTime(timeMs);
+    markerTimeEditor.setCustomValidity('');
     markerMode.textContent = 'Nueva marca';
     markerType.value = '';
     markerNote.value = '';
@@ -192,10 +204,43 @@
   markerComposer.querySelector('[data-marker-use-current]').addEventListener('click', () => {
     const timeMs = Math.round(wavesurfer.getCurrentTime() * 1000);
     markerTimeInput.value = String(timeMs);
-    markerTimeLabel.textContent = formatPreciseTime(timeMs);
+    markerTimeEditor.value = formatPreciseTime(timeMs);
+    markerTimeEditor.setCustomValidity('');
   });
 
-  markerForm.addEventListener('submit', () => {
+  const syncEditedTime = () => {
+    const timeMs = parsePreciseTime(markerTimeEditor.value);
+    const durationMs = Math.round(wavesurfer.getDuration() * 1000);
+
+    if (timeMs === null) {
+      markerTimeEditor.setCustomValidity('Usá el formato minutos:segundos.milisegundos, por ejemplo 1:23.456.');
+      return false;
+    }
+
+    if (durationMs > 0 && timeMs > durationMs) {
+      markerTimeEditor.setCustomValidity('El tiempo no puede superar la duración de la canción.');
+      return false;
+    }
+
+    markerTimeEditor.setCustomValidity('');
+    markerTimeInput.value = String(timeMs);
+    return true;
+  };
+
+  markerTimeEditor.addEventListener('input', syncEditedTime);
+  markerTimeEditor.addEventListener('change', () => {
+    if (syncEditedTime()) {
+      markerTimeEditor.value = formatPreciseTime(Number(markerTimeInput.value));
+    }
+  });
+
+  markerForm.addEventListener('submit', (event) => {
+    if (!syncEditedTime()) {
+      event.preventDefault();
+      markerTimeEditor.reportValidity();
+      return;
+    }
+
     markerResumePlaying.value = wavesurfer.isPlaying() ? '1' : '0';
   });
 
@@ -216,7 +261,8 @@
       const timeMs = Number(button.dataset.timeMs);
       markerForm.action = button.dataset.updateAction;
       markerTimeInput.value = String(timeMs);
-      markerTimeLabel.textContent = formatPreciseTime(timeMs);
+      markerTimeEditor.value = formatPreciseTime(timeMs);
+      markerTimeEditor.setCustomValidity('');
       markerMode.textContent = 'Editar marca';
       markerType.value = button.dataset.markerTypeId;
       markerNote.value = button.dataset.note;
@@ -237,6 +283,7 @@
 
   regions?.on('region-clicked', (region, event) => {
     event.stopPropagation();
+    if (event.button !== 0) return;
     wavesurfer.setTime(region.start);
     current.textContent = formatTime(region.start);
   });

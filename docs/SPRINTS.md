@@ -127,6 +127,8 @@ Un sprint se considera terminado solamente cuando:
 - Eliminación con confirmación y validación de pertenencia a la canción.
 - Puntos de color sobre la forma de onda mediante Regions de WaveSurfer 7.
 - Salto al instante al tocar tanto el punto como la fila del listado.
+- Campo de tiempo editable con precisión de milisegundos y validación contra la duración del audio.
+- Forma de onda más alta, puntos sin recorte y menú contextual deshabilitado sobre ellos.
 
 **Alcance propuesto:**
 
