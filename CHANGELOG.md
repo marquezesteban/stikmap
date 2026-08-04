@@ -2,6 +2,13 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.4.0] - 2026-08-03
+
+- Carga y edición opcional de la letra desde el formulario de canción.
+- Persistencia en SQLite respetando versos, espacios y saltos de línea.
+- Panel de lectura de letra adaptable a escritorio, tablets y teléfonos.
+- Estado vacío con acceso directo para agregar la letra.
+
 ## [0.3.2] - 2026-08-03
 
 - CRUD de canciones con carga opcional de MP3.

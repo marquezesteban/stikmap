@@ -73,3 +73,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** StikMap usa versionado semántico desde `v0.3.2`. Cada sprint principal incrementa la versión menor, las mejoras o correcciones incrementan el parche y `v1.0.0` queda reservado para el MVP completo, probado y documentado.
 
 **Motivo:** identificar con claridad qué avance está instalado, mantener un historial entendible y facilitar futuras actualizaciones.
+
+## D-013 — Letra completa antes de asociar líneas
+
+**Decisión:** la entrega 4.1 guarda la letra completa en la canción y la presenta respetando su formato. La selección de líneas desde las marcas se implementa por separado en la entrega 4.2.
+
+**Motivo:** probar primero el ingreso, la persistencia y la lectura en pantallas táctiles antes de sumar relaciones entre letra y mapa temporal.

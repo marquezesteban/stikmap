@@ -21,7 +21,7 @@ No incluye autenticación, usuarios ni servicios en la nube.
 - [Decisiones](docs/DECISIONS.md): criterios de producto y arquitectura que protegen el foco del MVP.
 - [Historial de versiones](CHANGELOG.md): avances publicados y criterio de numeración.
 
-Versión actual: **v0.3.2**. Los Sprints 0 a 3 están terminados y probados. El próximo avance será el Sprint 4, dedicado a la letra y su asociación opcional con las marcas.
+Versión actual: **v0.4.0**. Los Sprints 0 a 3 y la entrega 4.1 están terminados. La próxima entrega asociará opcionalmente cada marca con una línea de la letra.
 
 ## Stack
 
