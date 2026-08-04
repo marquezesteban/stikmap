@@ -38,12 +38,17 @@ final class SongController
     public function printSheet(): void
     {
         $song = $this->requireSong();
+        $markers = $this->markers->allForSong((int) $song['id']);
 
         render('songs/print', [
             'layout' => 'print',
-            'pageTitle' => 'Machete · ' . (string) $song['title'],
+            'pageTitle' => 'Cancionero · ' . (string) $song['title'],
             'song' => $song,
-            'markers' => $this->markers->allForSong((int) $song['id']),
+            'markers' => $markers,
+            'lyricLines' => $this->songs->ensureLyricLinesForSong(
+                (int) $song['id'],
+                isset($song['lyrics']) ? (string) $song['lyrics'] : null,
+            ),
         ]);
     }
 

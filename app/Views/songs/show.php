@@ -33,7 +33,7 @@ $lyricsDisplayLines = $lyricsDisplayLines === false ? [] : $lyricsDisplayLines;
             <p class="page-subtitle mb-0"><?= escape($song['artist'] ?: 'Artista sin especificar') ?></p>
         </div>
         <div class="song-detail-actions">
-            <a class="btn-app btn-app-secondary" href="<?= escape(appUrl('print', ['id' => (int) $song['id']])) ?>">Imprimir machete</a>
+            <a class="btn-app btn-app-secondary" href="<?= escape(appUrl('print', ['id' => (int) $song['id']])) ?>">Imprimir cancionero</a>
             <a class="btn-app btn-app-secondary" href="<?= escape(appUrl('edit', ['id' => (int) $song['id']])) ?>">Editar datos</a>
         </div>
     </header>
