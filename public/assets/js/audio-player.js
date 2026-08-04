@@ -22,13 +22,6 @@
   const markerNote = markerComposer?.querySelector('[name="note"]');
   const markerSubmit = markerComposer?.querySelector('[data-marker-submit]');
 
-  const formatTime = (seconds) => {
-    if (!Number.isFinite(seconds) || seconds < 0) return '0:00';
-    const rounded = Math.floor(seconds);
-    const minutes = Math.floor(rounded / 60);
-    return `${minutes}:${String(rounded % 60).padStart(2, '0')}`;
-  };
-
   const formatPreciseTime = (milliseconds) => {
     const safe = Math.max(0, Math.round(milliseconds));
     const minutes = Math.floor(safe / 60000);
@@ -86,7 +79,7 @@
   };
 
   wavesurfer.on('ready', (seconds) => {
-    duration.textContent = formatTime(seconds);
+    duration.textContent = formatPreciseTime(seconds * 1000);
     loading.hidden = true;
     toggle.disabled = false;
     markerCapture.disabled = false;
@@ -128,7 +121,7 @@
     const resumeSeconds = Math.min(seconds, Math.max(0, Number(player.dataset.resumeMs) / 1000));
     if (resumeSeconds > 0) {
       wavesurfer.setTime(resumeSeconds);
-      current.textContent = formatTime(resumeSeconds);
+      current.textContent = formatPreciseTime(resumeSeconds * 1000);
     }
 
     if (player.dataset.resumePlaying === '1') {
@@ -144,7 +137,7 @@
   });
 
   wavesurfer.on('timeupdate', (seconds) => {
-    current.textContent = formatTime(seconds);
+    current.textContent = formatPreciseTime(seconds * 1000);
   });
 
   wavesurfer.on('play', () => {
@@ -252,7 +245,7 @@
     button.addEventListener('click', () => {
       const seconds = Number(button.dataset.markerSeek) / 1000;
       wavesurfer.setTime(seconds);
-      current.textContent = formatTime(seconds);
+      current.textContent = formatPreciseTime(seconds * 1000);
     });
   });
 
@@ -285,7 +278,7 @@
     event.stopPropagation();
     if (event.button !== 0) return;
     wavesurfer.setTime(region.start);
-    current.textContent = formatTime(region.start);
+    current.textContent = formatPreciseTime(region.start * 1000);
 
     const markerId = String(region.id).replace(/^marker-/, '');
     const editButton = document.querySelector(`[data-marker-edit][data-marker-id="${markerId}"]`);

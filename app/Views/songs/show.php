@@ -93,9 +93,9 @@ $markerFormAction = $editingMarkerId > 0
                 </button>
                 <button class="transport-button transport-skip" type="button" data-player-skip="10" aria-label="Adelantar 10 segundos">+10</button>
                 <div class="player-time" aria-live="off">
-                    <span data-player-current>0:00</span>
+                    <span data-player-current>0:00.000</span>
                     <span aria-hidden="true">/</span>
-                    <span data-player-duration>0:00</span>
+                    <span data-player-duration>0:00.000</span>
                 </div>
             </div>
 

@@ -130,6 +130,7 @@ Un sprint se considera terminado solamente cuando:
 - Campo de tiempo editable con precisión de milisegundos y validación contra la duración del audio.
 - Forma de onda más alta, puntos sin recorte y menú contextual deshabilitado sobre ellos.
 - Apertura directa de la edición al tocar un punto de color sobre la onda.
+- Reloj del reproductor con milisegundos para posición actual y duración total.
 
 **Alcance propuesto:**
 
