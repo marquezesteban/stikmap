@@ -60,3 +60,11 @@ Si una línea o sección mantiene exactamente el mismo texto y cambia de posici�
 El botón **Marcar ahora** captura el instante actual sin detener automáticamente el audio. Después se puede elegir el tipo, corregir el tiempo con milisegundos, escribir una nota y asociar una línea o sección.
 
 Tocar una marca del listado o su punto de color lleva el reproductor a ese instante. Desde el mismo punto se puede abrir su edición.
+
+## Machete imprimible
+
+Desde la canción, el botón **Imprimir machete** abre una hoja independiente del reproductor. Incluye el título, artista y todas las marcas ordenadas con su tiempo, tipo, nota y referencia de letra o sección.
+
+El botón **Imprimir o guardar PDF** abre las opciones disponibles en el dispositivo. Desde una computadora se puede elegir una impresora o **Guardar como PDF**. Desde un teléfono se utiliza el menú de impresión o compartir ofrecido por el sistema.
+
+La hoja está preparada para tamaño A4 y evita dividir una marca entre dos páginas.

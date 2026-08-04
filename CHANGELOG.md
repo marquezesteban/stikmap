@@ -2,6 +2,14 @@
 
 StikMap usa versionado semántico durante el desarrollo del MVP.
 
+## [0.5.0] - 2026-08-04
+
+- Vista de machete independiente del reproductor y preparada para A4.
+- Marcas cronológicas con tiempo, tipo, nota y referencia de letra o sección.
+- Diseño de bajo consumo de tinta con identificación visual por tipo.
+- Impresión directa y guardado como PDF desde escritorio o teléfono.
+- Estado vacío para canciones que todavía no tienen marcas.
+
 ## [0.4.4] - 2026-08-04
 
 - Nuevo manual de uso enlazado desde el README.

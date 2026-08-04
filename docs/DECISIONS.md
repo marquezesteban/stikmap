@@ -91,3 +91,9 @@ Este registro evita reabrir decisiones sin contexto. Pueden revisarse si aparece
 **Decisión:** las anotaciones escritas en una línea propia entre corchetes, como `[VERSO 1]` o `[INSTRUMENTAL CON FILL]`, se consideran secciones musicales. El editor ofrece diez nombres frecuentes, pero las etiquetas continúan siendo texto editable.
 
 **Motivo:** representar entradas, fills y pasajes sin letra sin intentar adivinar automáticamente la estructura de cada canción.
+
+## D-016 — Machete como vista cronológica independiente
+
+**Decisión:** la impresión usa una vista clara separada del reproductor, ordena las marcas por tiempo y muestra solamente título, artista, tipo, nota y referencia de letra o sección. Cada marca evita cortarse entre páginas.
+
+**Motivo:** producir una guía rápida para tocar, legible en atril y con bajo consumo de tinta, sin trasladar controles interactivos al papel.

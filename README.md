@@ -22,7 +22,7 @@ No incluye autenticación, usuarios ni servicios en la nube.
 - [Manual de uso](docs/MANUAL.md): canciones, letras, secciones entre corchetes y marcas.
 - [Historial de versiones](CHANGELOG.md): avances publicados y criterio de numeración.
 
-Versión actual: **v0.4.4**. Los Sprints 0 a 4 están terminados; la letra admite secciones musicales y puede asociarse opcionalmente con las marcas. El próximo avance será la vista imprimible del Sprint 5.
+Versión actual: **v0.5.0**. Los Sprints 0 a 5 están terminados; StikMap ya genera un machete A4 imprimible con marcas, notas y referencias de letra. El próximo avance será el cierre integral del MVP.
 
 ## Stack
 
