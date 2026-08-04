@@ -688,11 +688,11 @@ textarea {
   font-size: clamp(0.98rem, 2vw, 1.08rem);
   line-height: 1.8;
   overflow-wrap: anywhere;
-  white-space: pre-wrap;
 }
 
 .lyrics-line {
   min-height: 1.8em;
+  white-space: pre-wrap;
 }
 
 .lyrics-line.is-empty {

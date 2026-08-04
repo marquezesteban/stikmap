@@ -338,9 +338,7 @@ $lyricsDisplayLines = $lyricsDisplayLines === false ? [] : $lyricsDisplayLines;
             <div class="lyrics-content">
                 <?php foreach ($lyricsDisplayLines as $line): ?>
                     <?php $isSection = isLyricSection($line); ?>
-                    <div class="lyrics-line<?= $isSection ? ' is-section' : ($line === '' ? ' is-empty' : '') ?>">
-                        <?= $isSection ? escape(lyricSectionLabel($line)) : escape($line) ?>
-                    </div>
+                    <div class="lyrics-line<?= $isSection ? ' is-section' : ($line === '' ? ' is-empty' : '') ?>"><?= $isSection ? escape(lyricSectionLabel($line)) : escape($line) ?></div>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
