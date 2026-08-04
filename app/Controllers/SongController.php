@@ -35,6 +35,18 @@ final class SongController
         $this->renderShow($this->requireSong());
     }
 
+    public function printSheet(): void
+    {
+        $song = $this->requireSong();
+
+        render('songs/print', [
+            'layout' => 'print',
+            'pageTitle' => 'Machete · ' . (string) $song['title'],
+            'song' => $song,
+            'markers' => $this->markers->allForSong((int) $song['id']),
+        ]);
+    }
+
     public function store(): void
     {
         verifyCsrfToken();

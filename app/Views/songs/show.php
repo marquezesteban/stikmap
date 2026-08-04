@@ -32,7 +32,10 @@ $lyricsDisplayLines = $lyricsDisplayLines === false ? [] : $lyricsDisplayLines;
             <h1 class="song-detail-title mb-2"><?= escape((string) $song['title']) ?></h1>
             <p class="page-subtitle mb-0"><?= escape($song['artist'] ?: 'Artista sin especificar') ?></p>
         </div>
-        <a class="btn-app btn-app-secondary" href="<?= escape(appUrl('edit', ['id' => (int) $song['id']])) ?>">Editar datos</a>
+        <div class="song-detail-actions">
+            <a class="btn-app btn-app-secondary" href="<?= escape(appUrl('print', ['id' => (int) $song['id']])) ?>">Imprimir machete</a>
+            <a class="btn-app btn-app-secondary" href="<?= escape(appUrl('edit', ['id' => (int) $song['id']])) ?>">Editar datos</a>
+        </div>
     </header>
 
     <?php if ($flashMessage !== null): ?>

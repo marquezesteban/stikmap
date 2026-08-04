@@ -28,6 +28,7 @@ try {
     match ([$method, $action]) {
         ['GET', 'index'] => $controller->index(),
         ['GET', 'show'] => $controller->show(),
+        ['GET', 'print'] => $controller->printSheet(),
         ['GET', 'create'] => $controller->create(),
         ['POST', 'store'] => $controller->store(),
         ['GET', 'edit'] => $controller->edit(),

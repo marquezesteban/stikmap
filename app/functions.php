@@ -125,6 +125,9 @@ function lyricSectionLabel(string $line): string
  */
 function render(string $view, array $data = []): void
 {
+    $layoutName = isset($data['layout']) && in_array($data['layout'], ['app', 'print'], true)
+        ? (string) $data['layout']
+        : 'app';
     extract($data, EXTR_SKIP);
 
     ob_start();
@@ -133,5 +136,5 @@ function render(string $view, array $data = []): void
     $content = (string) ob_get_clean();
 
     require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR
-        . 'Views' . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . 'app.php';
+        . 'Views' . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $layoutName . '.php';
 }

@@ -75,3 +75,7 @@ document.querySelectorAll('[data-lyrics-tools]').forEach((tools) => {
     insertButton.disabled = true;
   });
 });
+
+document.querySelectorAll('[data-print-trigger]').forEach((button) => {
+  button.addEventListener('click', () => window.print());
+});

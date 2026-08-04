@@ -626,6 +626,14 @@ textarea {
   gap: 2rem;
 }
 
+.song-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
 .song-detail-title {
   max-width: 48rem;
   color: var(--ink);
@@ -1487,6 +1495,11 @@ textarea {
 
   .song-detail-heading .btn-app {
     min-height: 2.8rem;
+  }
+
+  .song-detail-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .lyrics-heading {
